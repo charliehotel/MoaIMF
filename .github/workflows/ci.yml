@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Verify toolchain
+        run: swift --version
+      - name: Check formatting
+        run: xcrun swift-format lint --strict --recursive Sources Tests Package.swift
+      - name: Test
+        run: swift test
+      - name: Build release app
+        run: scripts/build-app.sh
+      - name: Verify bundle signature
+        run: codesign --verify --deep --strict .build/MoaIMF.app
