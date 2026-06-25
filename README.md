@@ -1,5 +1,6 @@
-| [🇰🇷 한국어](README.md) | [🇺🇸 English](README/README.en.md) | [🇯🇵 日本語](README/README.ja.md) | [🇨🇳 简体中文](README/README.zh-Hans.md) | [🇹🇼 繁體中文](README/README.zh-Hant.md) | [🇻🇳 Tiếng Việt](README/README.vi.md) | [🇫🇷 Français](README/README.fr.md) | [🇩🇪 Deutsch](README/README.de.md) | [🇪🇸 Español](README/README.es.md) | [🇵🇹 Português](README/README.pt.md) | [🇹🇭 ไทย](README/README.th.md) | [🇸🇦 العربية](README/README.ar.md) |
-|---|---|---|---|---|---|---|---|---|---|---|---|
+[🇰🇷 한국어](README.md) | [🇺🇸 English](README/README.en.md) | [🇯🇵 日本語](README/README.ja.md) | [🇨🇳 简体中文](README/README.zh-Hans.md) | [🇹🇼 繁體中文](README/README.zh-Hant.md) | [🇻🇳 Tiếng Việt](README/README.vi.md)<br>
+[🇫🇷 Français](README/README.fr.md) | [🇩🇪 Deutsch](README/README.de.md) | [🇪🇸 Español](README/README.es.md) | [🇵🇹 Português](README/README.pt.md) | [🇹🇭 ไทย](README/README.th.md) | [🇸🇦 العربية](README/README.ar.md)
+
 
 <p align="center">
   <img src="Assets.xcassets/MoaIMF_icon.png" width="128" height="128" alt="MoaIMF 아이콘">
