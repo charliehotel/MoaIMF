@@ -1,6 +1,8 @@
-[🇰🇷 한국어](README.md) | [🇺🇸 English](README/README.en.md) | [🇯🇵 日本語](README/README.ja.md) | [🇨🇳 简体中文](README/README.zh-Hans.md) | [🇹🇼 繁體中文](README/README.zh-Hant.md) | [🇻🇳 Tiếng Việt](README/README.vi.md)<br>
-[🇫🇷 Français](README/README.fr.md) | [🇩🇪 Deutsch](README/README.de.md) | [🇪🇸 Español](README/README.es.md) | [🇵🇹 Português](README/README.pt.md) | [🇹🇭 ไทย](README/README.th.md) | [🇸🇦 العربية](README/README.ar.md)
-
+<p align="center">
+  <a href="README.md">🇰🇷 한국어</a> | <a href="README/README.en.md">🇺🇸 English</a> | <a href="README/README.ja.md">🇯🇵 日本語</a> | <a href="README/README.zh-Hans.md">🇨🇳 简体中文</a> | <a href="README/README.zh-Hant.md">🇹🇼 繁體中文</a> | <a href="README/README.vi.md">🇻🇳 Tiếng Việt</a>
+  <br>
+  <a href="README/README.fr.md">🇫🇷 Français</a> | <a href="README/README.de.md">🇩🇪 Deutsch</a> | <a href="README/README.es.md">🇪🇸 Español</a> | <a href="README/README.pt.md">🇵🇹 Português</a> | <a href="README/README.th.md">🇹🇭 ไทย</a> | <a href="README/README.ar.md">🇸🇦 العربية</a>
+</p>
 
 <p align="center">
   <img src="Assets.xcassets/MoaIMF_icon.png" width="128" height="128" alt="MoaIMF 아이콘">
