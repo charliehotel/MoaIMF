@@ -200,9 +200,20 @@ Selecting `Quit MoaIMF` cleans up monitoring tasks and security-scoped access, t
 
 ## Installation and Build
 
-MoaIMF currently assumes source-based installation. A Developer ID signed and Apple-notarized distribution package is not provided yet.
+### Install the Release App
 
-### Requirements
+Download `MoaIMF.dmg` from GitHub Releases, open it, and copy `MoaIMF.app` to `/Applications`.
+
+The release app is not yet Developer ID signed or Apple-notarized. If macOS blocks it and you trust the downloaded app, remove the quarantine attribute and open it with:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+### Build from Source
+
+#### Requirements
 
 - macOS 13 Ventura or later
 - Xcode 16 or compatible Xcode Command Line Tools
@@ -220,16 +231,15 @@ The build scripts also use standard macOS tools:
 
 At runtime, MoaIMF does not require a separate server, database, or network API.
 
-### Clone the Repository
+#### Clone the Repository
 
 ```sh
 git clone https://github.com/charliehotel/MoaIMF.git
 cd MoaIMF
 ```
 
-The repository URL may be adjusted to match the actual public location.
 
-### Check and Build
+#### Check and Build
 
 Run the full checks, tests, and app bundle build with:
 
@@ -255,7 +265,7 @@ To run it locally:
 open .build/MoaIMF.app
 ```
 
-The app created by `scripts/build-app.sh` is an ad-hoc signed app for local testing. To distribute it to other Macs, configure Developer ID signing and notarization separately.
+The app created by `scripts/build-app.sh` is also not Developer ID signed or Apple-notarized. If another Mac blocks it, remove the quarantine attribute with the `xattr` command above.
 
 ## Local Data Location
 
@@ -300,8 +310,8 @@ MoaIMF's basic principle is: safely change only names, and stop when unsure.
 - It does not automatically merge conflicting files or resolve them with new names.
 - It does not rebuild Spotlight or Alfred indexes directly.
 - If a filesystem, sync tool, or external storage device rewrites filename bytes again, the app cannot automatically recover every case.
-- It currently focuses on source builds and local testing app bundles.
-- Automatic updates, App Store distribution, and notarized DMG distribution are not available yet.
+- The release app is not yet Developer ID signed or Apple-notarized.
+- Automatic updates and App Store distribution are not available yet.
 
 ## Uninstall
 

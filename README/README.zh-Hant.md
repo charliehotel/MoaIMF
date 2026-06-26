@@ -200,7 +200,14 @@ MoaIMF 不會變更檔案內容。它只處理檔名與資料夾名稱的 Unicod
 
 ## 安裝與建置
 
-目前假定以原始碼建置安裝。尚未提供經 Developer ID 簽署與 Apple 公證的發佈檔案。
+從 GitHub Releases 下載 `MoaIMF.dmg`，開啟後將 `MoaIMF.app` 複製到 `/Applications`。發佈版尚未經過 Developer ID 簽署與 Apple 公證，因此 macOS 可能會阻擋執行。如果你信任下載的 App，可以用以下命令移除隔離屬性後啟動。
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+如果要從原始碼建置:
 
 ### 需求
 
@@ -255,7 +262,7 @@ scripts/build-app.sh
 open .build/MoaIMF.app
 ```
 
-`scripts/build-app.sh` 產生的是本機測試用的 ad-hoc 簽署 App。若要分發到其他 Mac，需要另外設定 Developer ID 簽署與 notarization。
+`scripts/build-app.sh` 產生的 App 也尚未經過 Developer ID 簽署與 Apple 公證。如果 macOS 阻擋執行，可以使用上面的 `xattr` 命令移除隔離屬性。
 
 ## 本機資料位置
 

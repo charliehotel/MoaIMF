@@ -110,7 +110,14 @@ MoaIMF ليس سكربت تنظيف يعمل مرة واحدة. إنه أداة 
 
 ## التثبيت والبناء
 
-حالياً يفترض MoaIMF التثبيت من المصدر. لا توجد حزمة موقعة بـ Developer ID وموثقة من Apple بعد.
+نزّل `MoaIMF.dmg` من GitHub Releases، افتحه، ثم انسخ `MoaIMF.app` إلى `/Applications`. إصدار التطبيق غير موقّع حالياً بـ Developer ID وغير موثّق من Apple. إذا منعه macOS وكنت تثق بالملف الذي نزّلته، أزل خاصية quarantine ثم افتح التطبيق.
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+للبناء من المصدر:
 
 ```sh
 git clone https://github.com/charliehotel/MoaIMF.git

@@ -110,7 +110,14 @@ MoaIMF ไม่รวมไฟล์ที่อาจ conflict และไม
 
 ## การติดตั้งและ build
 
-ตอนนี้ MoaIMF ใช้วิธี build จาก source ยังไม่มีแพ็กเกจที่เซ็นด้วย Developer ID และ notarized โดย Apple
+ดาวน์โหลด `MoaIMF.dmg` จาก GitHub Releases เปิดไฟล์ แล้วคัดลอก `MoaIMF.app` ไปที่ `/Applications` แอป release ยังไม่ได้เซ็นด้วย Developer ID หรือ notarized โดย Apple หาก macOS บล็อก และคุณเชื่อถือไฟล์ที่ดาวน์โหลด ให้ลบ quarantine attribute แล้วเปิดแอป
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+หากต้องการ build จาก source:
 
 ```sh
 git clone https://github.com/charliehotel/MoaIMF.git

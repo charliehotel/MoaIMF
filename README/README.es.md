@@ -110,7 +110,14 @@ Los idiomas incluidos son traducciones de IA para comodidad. Informa errores o s
 
 ## Instalación y build
 
-MoaIMF actualmente se instala desde código fuente. Todavía no se proporciona un paquete firmado con Developer ID y notarizado por Apple.
+Descarga `MoaIMF.dmg` desde GitHub Releases, ábrelo y copia `MoaIMF.app` a `/Applications`. La app de release todavía no está firmada con Developer ID ni notarizada por Apple. Si macOS la bloquea y confías en la descarga, elimina el atributo de cuarentena y abre la app.
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+Para compilar desde el código fuente:
 
 ```sh
 git clone https://github.com/charliehotel/MoaIMF.git

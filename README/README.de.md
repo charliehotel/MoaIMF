@@ -110,7 +110,14 @@ Die Sprachen sind KI-Übersetzungen zur Vereinfachung. Fehler oder zusätzliche 
 
 ## Installation und Build
 
-Derzeit wird die Installation aus dem Quellcode vorausgesetzt. Ein mit Developer ID signiertes und von Apple notarisiertes Paket gibt es noch nicht.
+Laden Sie `MoaIMF.dmg` aus GitHub Releases herunter, öffnen Sie es und kopieren Sie `MoaIMF.app` nach `/Applications`. Die Release-App ist noch nicht mit Developer ID signiert oder von Apple notarisiert. Wenn macOS sie blockiert und Sie dem Download vertrauen, entfernen Sie das Quarantäne-Attribut und öffnen Sie die App.
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+Aus dem Quellcode bauen:
 
 ```sh
 git clone https://github.com/charliehotel/MoaIMF.git

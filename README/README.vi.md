@@ -112,7 +112,14 @@ Các ngôn ngữ được cung cấp là bản dịch AI để thuận tiện. N
 
 ## Cài đặt và build
 
-Hiện tại MoaIMF giả định cài đặt bằng cách build từ mã nguồn. Chưa có gói phân phối đã ký Developer ID và notarized bởi Apple.
+Tải `MoaIMF.dmg` từ GitHub Releases, mở tệp và sao chép `MoaIMF.app` vào `/Applications`. Bản release hiện chưa được ký Developer ID hoặc notarized bởi Apple. Nếu macOS chặn và bạn tin tưởng tệp đã tải, hãy gỡ thuộc tính quarantine rồi mở ứng dụng.
+
+```sh
+xattr -dr com.apple.quarantine /Applications/MoaIMF.app
+open /Applications/MoaIMF.app
+```
+
+Nếu muốn build từ mã nguồn:
 
 Yêu cầu:
 
