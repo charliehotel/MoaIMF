@@ -6,6 +6,7 @@ public enum MoaIMFEnvironment {
   public static func makeController(
     preferences: any AppPreferencesStoring = UserDefaultsAppPreferences(),
     languageManager: LanguageManager? = nil,
+    automaticallyCheckForUpdates: Bool = false,
     terminate: @escaping @MainActor () -> Void
   ) -> AppController {
     let support = applicationSupportDirectory()
@@ -41,6 +42,8 @@ public enum MoaIMFEnvironment {
       ),
       preferences: preferences,
       languageManager: languageManager,
+      updateService: GitHubUpdateService(),
+      automaticallyCheckForUpdates: automaticallyCheckForUpdates,
       terminate: terminate
     )
   }

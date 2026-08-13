@@ -9,6 +9,7 @@ public final class AppWindowManager {
   private var historyWindow: NSWindowController?
   private var aboutWindow: NSWindowController?
   private var launchHintWindow: NSWindowController?
+  private var scanResultWindow: NSWindowController?
 
   public init() {}
 
@@ -22,6 +23,10 @@ public final class AppWindowManager {
 
   public var isLaunchHintVisible: Bool {
     launchHintWindow?.window?.isVisible == true
+  }
+
+  public var isScanResultVisible: Bool {
+    scanResultWindow?.window?.isVisible == true
   }
 
   var historyContentMinimumSize: NSSize? {
@@ -133,11 +138,45 @@ public final class AppWindowManager {
     present(historyWindow)
   }
 
+  public func showScanResult(
+    summary: ScanResultSummary,
+    languageManager: LanguageManager = .shared
+  ) {
+    let rootView = ScanResultView(
+      summary: summary,
+      languageManager: languageManager
+    ) { [weak self] in
+      self?.scanResultWindow?.close()
+    }
+    if scanResultWindow == nil {
+      scanResultWindow = makeWindow(
+        title: MoaIMFLocalization.text("scanResult.title"),
+        size: ScanResultView.preferredSize,
+        minSize: ScanResultView.minimumSize,
+        rootView: rootView
+      )
+    } else {
+      let hostingController = NSHostingController(rootView: rootView)
+      hostingController.sizingOptions = []
+      scanResultWindow?.window?.contentViewController = hostingController
+      if let window = scanResultWindow?.window {
+        applyContentSizeConstraints(
+          minimumSize: ScanResultView.minimumSize,
+          maximumSize: nil,
+          to: window
+        )
+      }
+    }
+    scanResultWindow?.window?.title = MoaIMFLocalization.text("scanResult.title")
+    present(scanResultWindow)
+  }
+
   public func closeAll() {
     aboutWindow?.close()
     settingsWindow?.close()
     historyWindow?.close()
     launchHintWindow?.close()
+    scanResultWindow?.close()
   }
 
   private func makeWindow<Content: View>(

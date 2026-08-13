@@ -29,6 +29,87 @@ final class VisualRenderingTests: XCTestCase {
     await controller.load()
     await controller.scanFolder(id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!)
 
+    let updateMenuSize = NSSize(width: 520, height: 760)
+    let idleController = makeUpdateController(
+      service: SnapshotUpdateService(checkResult: .current(latestVersion: "0.1.1"))
+    )
+    try render(
+      MenuBarView(controller: idleController),
+      named: "moaimf-menu-update-idle.png",
+      size: updateMenuSize
+    )
+
+    let checkingController = makeUpdateController(
+      service: SnapshotUpdateService(
+        checkResult: .current(latestVersion: "0.1.1"),
+        checkDelayNanoseconds: 500_000_000
+      )
+    )
+    let checkingTask = Task { await checkingController.checkForUpdates() }
+    try await Task.sleep(nanoseconds: 50_000_000)
+    try render(
+      MenuBarView(controller: checkingController),
+      named: "moaimf-menu-update-checking.png",
+      size: updateMenuSize
+    )
+    checkingTask.cancel()
+    _ = await checkingTask.value
+
+    let currentController = makeUpdateController(
+      service: SnapshotUpdateService(checkResult: .current(latestVersion: "0.1.1"))
+    )
+    await currentController.checkForUpdates()
+    try render(
+      MenuBarView(controller: currentController),
+      named: "moaimf-menu-update-current.png",
+      size: updateMenuSize
+    )
+
+    let updateController = makeUpdateController(service: SnapshotUpdateService())
+    await updateController.checkForUpdates()
+    try render(
+      MenuBarView(controller: updateController),
+      named: "moaimf-menu-update.png",
+      size: updateMenuSize
+    )
+
+    let downloadingController = makeUpdateController(
+      service: SnapshotUpdateService(downloadDelayNanoseconds: 500_000_000)
+    )
+    await downloadingController.checkForUpdates()
+    let downloadingTask = Task { await downloadingController.downloadAvailableUpdate() }
+    try await Task.sleep(nanoseconds: 50_000_000)
+    try render(
+      MenuBarView(controller: downloadingController),
+      named: "moaimf-menu-update-downloading.png",
+      size: updateMenuSize
+    )
+    downloadingTask.cancel()
+    _ = await downloadingTask.value
+
+    let downloadedController = makeUpdateController(service: SnapshotUpdateService())
+    await downloadedController.checkForUpdates()
+    await downloadedController.downloadAvailableUpdate()
+    try render(
+      MenuBarView(controller: downloadedController),
+      named: "moaimf-menu-update-downloaded.png",
+      size: updateMenuSize
+    )
+
+    let frenchLanguage = LanguageManager(preferences: SnapshotPreferences())
+    frenchLanguage.setLanguage(.french)
+    let longLabelController = makeUpdateController(
+      service: SnapshotUpdateService(checkResult: .available(SnapshotUpdateService.longUpdate)),
+      languageManager: frenchLanguage
+    )
+    await longLabelController.checkForUpdates()
+    try render(
+      MenuBarView(controller: longLabelController),
+      named: "moaimf-menu-update-long-locale.png",
+      size: updateMenuSize
+    )
+    MoaIMFLocalization.setLanguage(.system)
+
     try render(
       SettingsView(controller: controller),
       named: "moaimf-settings-folders.png",
@@ -58,8 +139,8 @@ final class VisualRenderingTests: XCTestCase {
       AboutView(
         info: AboutAppInfo(
           appName: "MoaIMF",
-          version: "0.1.0",
-          build: "1",
+          version: "0.1.1",
+          build: "2",
           copyright: "Copyright © 2026 copylawbot"
         )
       ),
@@ -78,6 +159,71 @@ final class VisualRenderingTests: XCTestCase {
       FolderScanReportView(report: report).padding(20),
       named: "moaimf-folder-scan-report.png",
       size: NSSize(width: 720, height: 180)
+    )
+    let changedSource = URL(fileURLWithPath: "/Users/example/Downloads/한글-보고서.txt")
+    let changedTarget = URL(fileURLWithPath: "/Users/example/Downloads/한글-보고서.txt")
+    let changedOutcome = RenameOutcome(
+      identity: FileIdentity(volume: "snapshot", resource: "changed"),
+      source: changedSource,
+      target: changedTarget,
+      kind: .renamed,
+      reason: nil
+    )
+    let longChangedSource = URL(
+      fileURLWithPath: "/Users/example/Downloads/한글-보고서-2026년-8월-최종검토본.txt"
+    )
+    let longChangedTarget = URL(
+      fileURLWithPath: "/Users/example/Downloads/한글-보고서-2026년-8월-최종검토본.txt"
+    )
+    let longChangedOutcome = RenameOutcome(
+      identity: FileIdentity(volume: "snapshot", resource: "long-changed"),
+      source: longChangedSource,
+      target: longChangedTarget,
+      kind: .renamed,
+      reason: nil
+    )
+    let scanResult = ScanResultSummary(
+      reports: [
+        FolderScanReport(
+          root: report.root,
+          scannedAt: Date(),
+          result: ScanServiceResult(
+            summary: ScanContentSummary(
+              totalEntryCount: 12,
+              nfcEntryCount: 9,
+              nonNFCEntryCount: 3
+            ),
+            plan: NormalizationPlan(
+              candidates: [
+                RenameCandidate(
+                  identity: changedOutcome.identity,
+                  source: changedSource,
+                  targetName: changedTarget.lastPathComponent
+                ),
+                RenameCandidate(
+                  identity: longChangedOutcome.identity,
+                  source: longChangedSource,
+                  targetName: longChangedTarget.lastPathComponent
+                ),
+              ],
+              collisions: [
+                NormalizationCollision(
+                  parent: report.root,
+                  normalizedKey: "충돌.txt",
+                  rawNames: ["충돌.txt", "충돌.txt"]
+                )
+              ]
+            ),
+            outcomes: [changedOutcome, longChangedOutcome],
+            deferredIdentities: [FileIdentity(volume: "snapshot", resource: "deferred")]
+          )
+        )
+      ]
+    )
+    try render(
+      ScanResultView(summary: scanResult),
+      named: "moaimf-scan-result.png",
+      size: ScanResultView.preferredSize
     )
     try render(
       VStack(alignment: .leading, spacing: 8) {
@@ -108,6 +254,22 @@ final class VisualRenderingTests: XCTestCase {
     try png.write(to: output, options: .atomic)
 
     XCTAssertGreaterThan(png.count, 1_000)
+  }
+
+  @MainActor
+  private func makeUpdateController(
+    service: any AppUpdateServicing,
+    languageManager: LanguageManager? = nil
+  ) -> AppController {
+    AppController(
+      dataService: SnapshotDataService(),
+      scanController: SnapshotScanController(),
+      preferences: SnapshotPreferences(),
+      languageManager: languageManager,
+      updateService: service,
+      revealDownloadedUpdate: { _ in },
+      terminate: {}
+    )
   }
 }
 
@@ -218,6 +380,53 @@ private final class SnapshotScanController: AppScanControlling {
   func resume() async {}
   func rulesDidChange() async {}
   func shutdown() async {}
+}
+
+@MainActor
+private final class SnapshotUpdateService: AppUpdateServicing {
+  static let longUpdate = AppUpdate(
+    version: "123.456.789",
+    tagName: "v123.456.789",
+    releaseURL: URL(string: "https://example.com/release")!,
+    assetName: "MoaIMF-123.456.789.dmg",
+    downloadURL: URL(string: "https://example.com/MoaIMF-123.456.789.dmg")!
+  )
+
+  let checkResult: AppUpdateCheckResult
+  let checkDelayNanoseconds: UInt64
+  let downloadDelayNanoseconds: UInt64
+
+  init(
+    checkResult: AppUpdateCheckResult = .available(
+      AppUpdate(
+        version: "0.1.2",
+        tagName: "v0.1.2",
+        releaseURL: URL(string: "https://example.com/release")!,
+        assetName: "MoaIMF-0.1.2.dmg",
+        downloadURL: URL(string: "https://example.com/MoaIMF-0.1.2.dmg")!
+      )
+    ),
+    checkDelayNanoseconds: UInt64 = 0,
+    downloadDelayNanoseconds: UInt64 = 0
+  ) {
+    self.checkResult = checkResult
+    self.checkDelayNanoseconds = checkDelayNanoseconds
+    self.downloadDelayNanoseconds = downloadDelayNanoseconds
+  }
+
+  func check(currentVersion: String) async throws -> AppUpdateCheckResult {
+    if checkDelayNanoseconds > 0 {
+      try await Task.sleep(nanoseconds: checkDelayNanoseconds)
+    }
+    return checkResult
+  }
+
+  func download(_ update: AppUpdate) async throws -> URL {
+    if downloadDelayNanoseconds > 0 {
+      try await Task.sleep(nanoseconds: downloadDelayNanoseconds)
+    }
+    return FileManager.default.temporaryDirectory.appendingPathComponent(update.assetName)
+  }
 }
 
 @MainActor

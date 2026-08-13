@@ -45,6 +45,39 @@ public struct MenuBarView: View {
     .disabled(controller.folders.isEmpty || controller.isScanning)
     .keyboardShortcut("r")
 
+    Button(updateCheckTitle) {
+      Task { await controller.checkForUpdates() }
+    }
+    .disabled(
+      controller.updateCheckStatus == .checking
+        || controller.updateCheckStatus == .downloading
+    )
+
+    if controller.updateCheckStatus == .downloaded {
+      Label(
+        MoaIMFLocalization.text("menu.updateDownloaded"),
+        systemImage: "checkmark.circle"
+      )
+      .foregroundStyle(.secondary)
+    }
+
+    if let update = controller.availableUpdate,
+      controller.updateCheckStatus != .downloaded
+    {
+      Button {
+        Task { await controller.downloadAvailableUpdate() }
+      } label: {
+        Label(
+          String(
+            format: MoaIMFLocalization.text("menu.downloadUpdate"),
+            update.version
+          ),
+          systemImage: "arrow.down.circle"
+        )
+      }
+      .disabled(controller.updateCheckStatus == .downloading)
+    }
+
     Divider()
 
     Button(MoaIMFLocalization.text("menu.settings")) {
@@ -99,6 +132,28 @@ public struct MenuBarView: View {
       format: MoaIMFLocalization.text("menu.todayRenamedCount"),
       controller.todaysRenameCount
     )
+  }
+
+  private var updateCheckTitle: String {
+    switch controller.updateCheckStatus {
+    case .idle:
+      MoaIMFLocalization.text("menu.checkForUpdates")
+    case .checking:
+      MoaIMFLocalization.text("menu.updateChecking")
+    case .current:
+      MoaIMFLocalization.text("menu.updateCurrent")
+    case .available:
+      String(
+        format: MoaIMFLocalization.text("menu.updateAvailable"),
+        controller.availableUpdate?.version ?? ""
+      )
+    case .downloading:
+      MoaIMFLocalization.text("menu.updateDownloading")
+    case .downloaded:
+      MoaIMFLocalization.text("menu.checkForUpdates")
+    case .failed:
+      MoaIMFLocalization.text("menu.updateFailed")
+    }
   }
 }
 

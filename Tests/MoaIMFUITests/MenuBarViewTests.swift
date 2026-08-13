@@ -34,6 +34,16 @@ final class MenuBarViewTests: XCTestCase {
   }
 
   @MainActor
+  func testWindowManagerPresentsScanResultWindow() {
+    let manager = AppWindowManager()
+
+    manager.showScanResult(summary: ScanResultSummary(reports: []))
+
+    XCTAssertTrue(manager.isScanResultVisible)
+    manager.closeAll()
+  }
+
+  @MainActor
   func testWindowManagerPresentsLaunchHintWhenPreferenceAllowsIt() {
     let preferences = MenuBarPreferences()
     let manager = AppWindowManager()
@@ -88,13 +98,13 @@ final class MenuBarViewTests: XCTestCase {
   func testAboutInfoFormatsVersionAndBuild() {
     let info = AboutAppInfo(
       appName: "MoaIMF",
-      version: "0.1.0",
-      build: "1",
+      version: "0.1.1",
+      build: "2",
       copyright: "Copyright © 2026 copylawbot"
     )
 
-    XCTAssertTrue(info.versionText.contains("0.1.0"))
-    XCTAssertTrue(info.versionText.contains("(1)"))
+    XCTAssertTrue(info.versionText.contains("0.1.1"))
+    XCTAssertTrue(info.versionText.contains("(2)"))
   }
 
   @MainActor

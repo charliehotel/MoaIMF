@@ -14,7 +14,8 @@ struct MoaIMFApp: App {
     let languageManager = LanguageManager(preferences: preferences)
     let controller = MoaIMFEnvironment.makeController(
       preferences: preferences,
-      languageManager: languageManager
+      languageManager: languageManager,
+      automaticallyCheckForUpdates: true
     ) {
       NSApplication.shared.terminate(nil)
     }

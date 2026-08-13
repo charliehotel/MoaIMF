@@ -1,3 +1,4 @@
+import AppKit
 import Combine
 import Foundation
 import MoaIMFCore
@@ -10,8 +11,12 @@ public final class AppController: ObservableObject {
   @Published public private(set) var history: [HistoryEvent] = []
   @Published public private(set) var preview: PreviewState?
   @Published public private(set) var folderScanReports: [UUID: FolderScanReport] = [:]
+  @Published public private(set) var scanResult: ScanResultSummary?
   @Published public private(set) var alert: AppAlert?
   @Published public private(set) var isScanning = false
+  @Published public private(set) var updateCheckStatus: AppUpdateStatus = .idle
+  @Published public private(set) var availableUpdate: AppUpdate?
+  @Published public private(set) var updateErrorMessage: String?
 
   public let loginItemManager: LoginItemManager
   public let languageManager: LanguageManager
@@ -19,7 +24,13 @@ public final class AppController: ObservableObject {
   private let scanController: any AppScanControlling
   private let preferences: any AppPreferencesStoring
   private let notifier: SystemNotifier
+  private let presentScanResult: @MainActor (ScanResultSummary) -> Void
   private let terminate: @MainActor () -> Void
+  private let updateService: any AppUpdateServicing
+  private let automaticallyCheckForUpdates: Bool
+  private let currentVersion: String
+  private let revealDownloadedUpdate: @MainActor (URL) -> Void
+  private var updateCheckTask: Task<Void, Never>?
 
   public init(
     dataService: any AppDataServicing,
@@ -28,14 +39,34 @@ public final class AppController: ObservableObject {
     loginItemManager: LoginItemManager = LoginItemManager(),
     languageManager: LanguageManager? = nil,
     notifier: SystemNotifier = SystemNotifier(),
+    updateService: any AppUpdateServicing = NoopAppUpdateService(),
+    automaticallyCheckForUpdates: Bool = false,
+    currentVersion: String = AboutAppInfo.current().version,
+    revealDownloadedUpdate: (@MainActor (URL) -> Void)? = nil,
+    presentScanResult: (@MainActor (ScanResultSummary) -> Void)? = nil,
     terminate: @escaping @MainActor () -> Void
   ) {
+    let resolvedLanguageManager = languageManager ?? LanguageManager(preferences: preferences)
     self.dataService = dataService
     self.scanController = scanController
     self.preferences = preferences
     self.loginItemManager = loginItemManager
-    self.languageManager = languageManager ?? LanguageManager(preferences: preferences)
+    self.languageManager = resolvedLanguageManager
     self.notifier = notifier
+    self.updateService = updateService
+    self.automaticallyCheckForUpdates = automaticallyCheckForUpdates
+    self.currentVersion = currentVersion
+    self.revealDownloadedUpdate =
+      revealDownloadedUpdate ?? { downloadedURL in
+        NSWorkspace.shared.activateFileViewerSelecting([downloadedURL])
+      }
+    self.presentScanResult =
+      presentScanResult ?? { summary in
+        AppWindowManager.shared.showScanResult(
+          summary: summary,
+          languageManager: resolvedLanguageManager
+        )
+      }
     self.terminate = terminate
   }
 
@@ -53,6 +84,7 @@ public final class AppController: ObservableObject {
       }
       loginItemManager.refresh()
       updateStatus()
+      startAutomaticUpdateChecks()
     } catch {
       handle(error)
     }
@@ -135,8 +167,74 @@ public final class AppController: ObservableObject {
   }
 
   public func scanAll() async {
-    for folder in folders where folder.isEnabled && folder.status == .available {
-      await scanFolder(id: folder.id)
+    var reports: [FolderScanReport] = []
+    await withScanning(
+      {
+        for folder in folders where folder.isEnabled && folder.status == .available {
+          let preview = try await scanController.preview(root: folder.url)
+          let identities = Set(preview.plan.candidates.map(\.identity))
+          let result = try await scanController.apply(
+            root: folder.url,
+            identities: identities
+          )
+          let report = FolderScanReport(
+            root: folder.url,
+            scannedAt: Date(),
+            result: result
+          )
+          reports.append(report)
+          self.folderScanReports[folder.id] = report
+        }
+        self.history = try await self.dataService.loadHistory().sorted {
+          $0.timestamp > $1.timestamp
+        }
+        self.alert = nil
+        let summary = ScanResultSummary(reports: reports)
+        self.scanResult = summary
+        self.presentScanResult(summary)
+      },
+      onError: { error in
+        let summary = ScanResultSummary(
+          reports: reports,
+          errorMessage: error.localizedDescription
+        )
+        self.scanResult = summary
+        self.presentScanResult(summary)
+      })
+  }
+
+  public func checkForUpdates() async {
+    guard updateCheckStatus != .checking, updateCheckStatus != .downloading else { return }
+
+    updateCheckStatus = .checking
+    updateErrorMessage = nil
+    do {
+      switch try await updateService.check(currentVersion: currentVersion) {
+      case .current:
+        availableUpdate = nil
+        updateCheckStatus = .current
+      case .available(let update):
+        availableUpdate = update
+        updateCheckStatus = .available
+      }
+    } catch {
+      updateCheckStatus = .failed
+      updateErrorMessage = error.localizedDescription
+    }
+  }
+
+  public func downloadAvailableUpdate() async {
+    guard let update = availableUpdate, updateCheckStatus != .downloading else { return }
+
+    updateCheckStatus = .downloading
+    updateErrorMessage = nil
+    do {
+      let downloadedURL = try await updateService.download(update)
+      updateCheckStatus = .downloaded
+      revealDownloadedUpdate(downloadedURL)
+    } catch {
+      updateCheckStatus = .failed
+      updateErrorMessage = error.localizedDescription
     }
   }
 
@@ -169,6 +267,8 @@ public final class AppController: ObservableObject {
   }
 
   public func quit() async {
+    updateCheckTask?.cancel()
+    updateCheckTask = nil
     await scanController.shutdown()
     await dataService.shutdown()
     terminate()
@@ -207,10 +307,18 @@ public final class AppController: ObservableObject {
     if !preferences.isPaused { await scanController.resume() }
   }
 
-  private func withScanning(_ operation: () async throws -> Void) async {
+  private func withScanning(
+    _ operation: () async throws -> Void,
+    onError: ((Error) -> Void)? = nil
+  ) async {
     isScanning = true
     status = .scanning
-    do { try await operation() } catch { handle(error) }
+    do {
+      try await operation()
+    } catch {
+      handle(error)
+      onError?(error)
+    }
     isScanning = false
     updateStatus()
   }
@@ -232,6 +340,23 @@ public final class AppController: ObservableObject {
       status = .noFolders
     } else {
       status = .watching
+    }
+  }
+
+  private func startAutomaticUpdateChecks() {
+    guard automaticallyCheckForUpdates, updateCheckTask == nil else { return }
+
+    updateCheckTask = Task { [weak self] in
+      await self?.checkForUpdates()
+      while !Task.isCancelled {
+        do {
+          try await Task.sleep(for: .seconds(24 * 60 * 60))
+        } catch {
+          return
+        }
+        guard !Task.isCancelled else { return }
+        await self?.checkForUpdates()
+      }
     }
   }
 

@@ -109,13 +109,49 @@ public struct FolderScanReport: Equatable, Sendable {
   public var collisionCount: Int { result.plan.collisions.count }
   public var deferredCount: Int { result.deferredIdentities.count }
   public var renamedCount: Int { result.outcomes.filter { $0.kind == .renamed }.count }
-  public var failedCount: Int { result.outcomes.filter { $0.kind == .failed }.count }
+  public var failedCount: Int { result.outcomes.filter { $0.kind != .renamed }.count }
   public var candidateSamples: [RenameCandidate] { Array(result.plan.candidates.prefix(5)) }
 
   public init(root: URL, scannedAt: Date, result: ScanServiceResult) {
     self.root = root
     self.scannedAt = scannedAt
     self.result = result
+  }
+}
+
+public struct ScanResultSummary: Identifiable, Equatable, Sendable {
+  public let id: UUID
+  public let folderCount: Int
+  public let scannedCount: Int
+  public let candidateCount: Int
+  public let renamedOutcomes: [RenameOutcome]
+  public let collisionCount: Int
+  public let failedOutcomes: [RenameOutcome]
+  public let deferredCount: Int
+  public let errorMessage: String?
+
+  public var renamedCount: Int { renamedOutcomes.count }
+  public var failedCount: Int { failedOutcomes.count }
+
+  public init(
+    reports: [FolderScanReport],
+    errorMessage: String? = nil,
+    id: UUID = UUID()
+  ) {
+    let results = reports.map(\.result)
+    self.id = id
+    folderCount = reports.count
+    scannedCount = results.reduce(0) { $0 + $1.summary.totalEntryCount }
+    candidateCount = results.reduce(0) { $0 + $1.plan.candidates.count }
+    renamedOutcomes = results.flatMap { result in
+      result.outcomes.filter { $0.kind == .renamed }
+    }
+    collisionCount = results.reduce(0) { $0 + $1.plan.collisions.count }
+    failedOutcomes = results.flatMap { result in
+      result.outcomes.filter { $0.kind != .renamed }
+    }
+    deferredCount = results.reduce(0) { $0 + $1.deferredIdentities.count }
+    self.errorMessage = errorMessage
   }
 }
 

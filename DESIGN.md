@@ -31,6 +31,7 @@ MoaIMF is quiet, trustworthy, native, and reversible. It must feel like a macOS 
 ## 5. Components
 
 - `MenuBarExtra` uses menu style for status and frequent commands.
+- The update menu entry provides a manual `업데이트 확인` action, checks GitHub Releases once per day while the app is running, and shows a neighboring `arrow.down.circle` download action only when a newer DMG or ZIP is available. Checking, current, downloading, downloaded, and failure states use explicit text; downloading never installs or replaces the running app.
 - The menu includes an About MoaIMF command that opens a concise native window with app identity,
   version/build, local-only filename-normalization description, and copyright.
 - The menu includes an in-app language selector for System Default, English, and Korean. Manual
