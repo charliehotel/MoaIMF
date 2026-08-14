@@ -19,7 +19,7 @@ public struct AboutAppInfo: Equatable, Sendable {
       appName: info["CFBundleDisplayName"] as? String
         ?? info["CFBundleName"] as? String
         ?? MoaIMFLocalization.text("app.name"),
-      version: info["CFBundleShortVersionString"] as? String ?? "0.1.2",
+      version: info["CFBundleShortVersionString"] as? String ?? "0.1.1",
       build: info["CFBundleVersion"] as? String ?? "2",
       copyright: info["NSHumanReadableCopyright"] as? String ?? "Copyright © 2026 copylawbot"
     )

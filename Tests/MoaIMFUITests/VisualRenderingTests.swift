@@ -66,7 +66,7 @@ final class VisualRenderingTests: XCTestCase {
     )
 
     let updateController = makeUpdateController(service: SnapshotUpdateService())
-    await updateController.checkForUpdates()
+    await updateController.checkForUpdates(manually: false)
     try render(
       MenuBarView(controller: updateController),
       named: "moaimf-menu-update.png",
@@ -226,15 +226,34 @@ final class VisualRenderingTests: XCTestCase {
       size: ScanResultView.preferredSize
     )
     try render(
-      VStack(alignment: .leading, spacing: 8) {
-        LoginItemStatusView(state: .enabled)
-        LoginItemStatusView(state: .disabled)
-        LoginItemStatusView(state: .requiresApproval)
-        LoginItemStatusView(state: .notFound)
-      }
-      .padding(20),
-      named: "moaimf-login-item-status.png",
-      size: NSSize(width: 420, height: 160)
+      UpdateCurrentView(),
+      named: "moaimf-update-current.png",
+      size: UpdateCurrentView.preferredSize
+    )
+    try render(
+      UpdateFailureView(message: "The update server returned HTTP status 503."),
+      named: "moaimf-update-failure.png",
+      size: UpdateFailureView.preferredSize
+    )
+    try render(
+      UpdateAvailableView(
+        update: AppUpdate(
+          version: "0.1.2",
+          tagName: "v0.1.2",
+          releaseURL: URL(string: "https://example.com/release")!,
+          assetName: "MoaIMF-0.1.2.dmg",
+          downloadURL: URL(string: "https://example.com/MoaIMF-0.1.2.dmg")!,
+          releaseNotes: """
+            # MoaIMF v0.1.2
+
+            - 수동 업데이트 확인 결과를 언제나 명확하게 표시합니다.
+            - GitHub 릴리즈 노트 전체 내용을 줄바꿈과 함께 보여줍니다.
+            - 다운로드 버튼을 메뉴에서 계속 사용할 수 있습니다.
+            """
+        )
+      ),
+      named: "moaimf-update-available.png",
+      size: UpdateAvailableView.preferredSize
     )
   }
 

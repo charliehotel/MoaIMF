@@ -14,6 +14,7 @@ final class UpdateServiceTests: XCTestCase {
           "html_url": "https://github.com/charliehotel/MoaIMF/releases/tag/v0.1.2",
           "draft": false,
           "prerelease": false,
+          "body": "# MoaIMF 0.1.2\\n\\n- Improves update checks.\\n- Clarifies the download flow.\\n- Keeps the download button visible.\\n- Shows the full release notes.",
           "assets": [
             {
               "name": "MoaIMF-0.1.2.zip",
@@ -44,6 +45,17 @@ final class UpdateServiceTests: XCTestCase {
     }
     XCTAssertEqual(update.version, "0.1.2")
     XCTAssertEqual(update.assetName, "MoaIMF-0.1.2.dmg")
+    XCTAssertEqual(
+      update.releaseNotes,
+      """
+      # MoaIMF 0.1.2
+
+      - Improves update checks.
+      - Clarifies the download flow.
+      - Keeps the download button visible.
+      - Shows the full release notes.
+      """
+    )
     XCTAssertEqual(
       client.lastDataRequest?.value(forHTTPHeaderField: "Accept"), "application/vnd.github+json")
     XCTAssertEqual(

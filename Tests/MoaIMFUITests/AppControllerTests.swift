@@ -221,11 +221,46 @@ final class AppControllerTests: XCTestCase {
       updateService: FakeAppUpdateService(result: .available(update))
     )
 
-    await context.controller.checkForUpdates()
+    let result = await context.controller.checkForUpdates()
 
+    XCTAssertEqual(result, .available(update))
     XCTAssertEqual(context.controller.updateCheckStatus, .available)
     XCTAssertEqual(context.controller.availableUpdate, update)
+    XCTAssertEqual(context.controller.automaticAvailableUpdate, update)
     XCTAssertNil(context.controller.updateErrorMessage)
+  }
+
+  func testManualUpdateCheckReturnsCurrentRelease() async {
+    let context = TestContext(
+      updateService: FakeAppUpdateService(result: .current(latestVersion: "0.1.1"))
+    )
+
+    let result = await context.controller.checkForUpdates()
+
+    XCTAssertEqual(result, .current(latestVersion: "0.1.1"))
+    XCTAssertEqual(context.controller.updateCheckStatus, .current)
+    XCTAssertNil(context.controller.availableUpdate)
+    XCTAssertNil(context.controller.automaticAvailableUpdate)
+    XCTAssertNil(context.controller.updateErrorMessage)
+  }
+
+  func testAutomaticUpdateCheckKeepsOnlyDownloadCandidateInMenu() async throws {
+    let update = AppUpdate(
+      version: "0.1.2",
+      tagName: "v0.1.2",
+      releaseURL: URL(string: "https://example.com/release")!,
+      assetName: "MoaIMF-0.1.2.dmg",
+      downloadURL: URL(string: "https://example.com/MoaIMF-0.1.2.dmg")!
+    )
+    let context = TestContext(
+      updateService: FakeAppUpdateService(result: .available(update))
+    )
+
+    let result = await context.controller.checkForUpdates(manually: false)
+
+    XCTAssertNil(result)
+    XCTAssertEqual(context.controller.updateCheckStatus, .available)
+    XCTAssertEqual(context.controller.automaticAvailableUpdate, update)
   }
 
   func testScanAllRenamesOnDiskImmediatelyAndPersistsHistory() async throws {

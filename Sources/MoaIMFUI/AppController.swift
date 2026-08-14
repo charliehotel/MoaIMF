@@ -16,6 +16,7 @@ public final class AppController: ObservableObject {
   @Published public private(set) var isScanning = false
   @Published public private(set) var updateCheckStatus: AppUpdateStatus = .idle
   @Published public private(set) var availableUpdate: AppUpdate?
+  @Published public private(set) var automaticAvailableUpdate: AppUpdate?
   @Published public private(set) var updateErrorMessage: String?
 
   public let loginItemManager: LoginItemManager
@@ -203,23 +204,29 @@ public final class AppController: ObservableObject {
       })
   }
 
-  public func checkForUpdates() async {
-    guard updateCheckStatus != .checking, updateCheckStatus != .downloading else { return }
+  @discardableResult
+  public func checkForUpdates(manually: Bool = true) async -> AppUpdateCheckResult? {
+    guard updateCheckStatus != .checking, updateCheckStatus != .downloading else { return nil }
 
     updateCheckStatus = .checking
     updateErrorMessage = nil
     do {
-      switch try await updateService.check(currentVersion: currentVersion) {
+      let result = try await updateService.check(currentVersion: currentVersion)
+      switch result {
       case .current:
         availableUpdate = nil
+        automaticAvailableUpdate = nil
         updateCheckStatus = .current
       case .available(let update):
         availableUpdate = update
+        automaticAvailableUpdate = update
         updateCheckStatus = .available
       }
+      return manually ? result : nil
     } catch {
       updateCheckStatus = .failed
       updateErrorMessage = error.localizedDescription
+      return nil
     }
   }
 
@@ -347,7 +354,7 @@ public final class AppController: ObservableObject {
     guard automaticallyCheckForUpdates, updateCheckTask == nil else { return }
 
     updateCheckTask = Task { [weak self] in
-      await self?.checkForUpdates()
+      await self?.checkForUpdates(manually: false)
       while !Task.isCancelled {
         do {
           try await Task.sleep(for: .seconds(24 * 60 * 60))
@@ -355,7 +362,7 @@ public final class AppController: ObservableObject {
           return
         }
         guard !Task.isCancelled else { return }
-        await self?.checkForUpdates()
+        await self?.checkForUpdates(manually: false)
       }
     }
   }

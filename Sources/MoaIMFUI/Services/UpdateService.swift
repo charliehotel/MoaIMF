@@ -8,6 +8,7 @@ public struct AppUpdate: Equatable, Identifiable, Sendable {
   public let assetName: String
   public let downloadURL: URL
   public let digest: String?
+  public let releaseNotes: String
 
   public var id: String { tagName }
 
@@ -17,7 +18,8 @@ public struct AppUpdate: Equatable, Identifiable, Sendable {
     releaseURL: URL,
     assetName: String,
     downloadURL: URL,
-    digest: String? = nil
+    digest: String? = nil,
+    releaseNotes: String = ""
   ) {
     self.version = version
     self.tagName = tagName
@@ -25,6 +27,7 @@ public struct AppUpdate: Equatable, Identifiable, Sendable {
     self.assetName = assetName
     self.downloadURL = downloadURL
     self.digest = digest
+    self.releaseNotes = releaseNotes
   }
 }
 
@@ -197,7 +200,8 @@ public final class GitHubUpdateService: AppUpdateServicing {
         releaseURL: release.htmlURL,
         assetName: assetName,
         downloadURL: asset.browserDownloadURL,
-        digest: asset.digest
+        digest: asset.digest,
+        releaseNotes: Self.releaseNotes(from: release.body)
       )
     )
   }
@@ -244,6 +248,10 @@ public final class GitHubUpdateService: AppUpdateServicing {
     let lowercased = name.lowercased()
     return lowercased.hasPrefix("moaimf-")
       && (lowercased.hasSuffix(".dmg") || lowercased.hasSuffix(".zip"))
+  }
+
+  private static func releaseNotes(from body: String?) -> String {
+    body?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
   }
 
   private func uniqueDestination(for assetName: String) -> URL {
@@ -314,6 +322,7 @@ private struct GitHubRelease: Decodable {
   let draft: Bool
   let prerelease: Bool
   let assets: [GitHubAsset]
+  let body: String?
 
   enum CodingKeys: String, CodingKey {
     case tagName = "tag_name"
@@ -321,6 +330,7 @@ private struct GitHubRelease: Decodable {
     case draft
     case prerelease
     case assets
+    case body
   }
 }
 

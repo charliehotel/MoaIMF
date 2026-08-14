@@ -12,11 +12,11 @@ public struct MenuBarView: View {
   }
 
   public var body: some View {
-    Label(
-      MoaIMFLocalization.text(controller.status.localizationKey),
-      systemImage: controller.status.symbolName
-    )
-    .accessibilityLabel(MoaIMFLocalization.text(controller.status.localizationKey))
+    Button(MoaIMFLocalization.text("menu.about")) {
+      AppWindowManager.shared.showAbout(languageManager: languageManager)
+    }
+
+    Divider()
 
     Button(todayRenameSummary) {
       AppWindowManager.shared.showHistory(
@@ -25,12 +25,6 @@ public struct MenuBarView: View {
         filter: .renamed
       )
     }
-
-    Button(MoaIMFLocalization.text("menu.about")) {
-      AppWindowManager.shared.showAbout(languageManager: languageManager)
-    }
-
-    Divider()
 
     Button(
       MoaIMFLocalization.text(controller.isPaused ? "menu.resume" : "menu.pause")
@@ -44,39 +38,6 @@ public struct MenuBarView: View {
     }
     .disabled(controller.folders.isEmpty || controller.isScanning)
     .keyboardShortcut("r")
-
-    Button(updateCheckTitle) {
-      Task { await controller.checkForUpdates() }
-    }
-    .disabled(
-      controller.updateCheckStatus == .checking
-        || controller.updateCheckStatus == .downloading
-    )
-
-    if controller.updateCheckStatus == .downloaded {
-      Label(
-        MoaIMFLocalization.text("menu.updateDownloaded"),
-        systemImage: "checkmark.circle"
-      )
-      .foregroundStyle(.secondary)
-    }
-
-    if let update = controller.availableUpdate,
-      controller.updateCheckStatus != .downloaded
-    {
-      Button {
-        Task { await controller.downloadAvailableUpdate() }
-      } label: {
-        Label(
-          String(
-            format: MoaIMFLocalization.text("menu.downloadUpdate"),
-            update.version
-          ),
-          systemImage: "arrow.down.circle"
-        )
-      }
-      .disabled(controller.updateCheckStatus == .downloading)
-    }
 
     Divider()
 
@@ -104,6 +65,25 @@ public struct MenuBarView: View {
       }
     }
 
+    if let update = automaticDownloadCandidate {
+      UpdateMenuItemRepresentable(
+        update: update,
+        onCheck: { checkForUpdatesManually() },
+        onDownload: { downloadAvailableUpdate() }
+      )
+      .frame(height: UpdateMenuItemView.rowHeight)
+    } else {
+      updateCheckButton
+    }
+
+    if controller.updateCheckStatus == .downloaded {
+      Label(
+        MoaIMFLocalization.text("menu.updateDownloaded"),
+        systemImage: "checkmark.circle"
+      )
+      .foregroundStyle(.secondary)
+    }
+
     Toggle(
       MoaIMFLocalization.text("menu.loginAtLaunch"),
       isOn: Binding(
@@ -111,8 +91,6 @@ public struct MenuBarView: View {
         set: { loginItemManager.setEnabled($0) }
       )
     )
-    LoginItemStatusView(state: loginItemManager.state, languageManager: languageManager)
-
     if loginItemManager.state == .requiresApproval {
       Button(MoaIMFLocalization.text("menu.loginOpenSettings")) {
         loginItemManager.openSystemSettings()
@@ -136,48 +114,68 @@ public struct MenuBarView: View {
 
   private var updateCheckTitle: String {
     switch controller.updateCheckStatus {
-    case .idle:
+    case .idle, .current, .available, .downloaded:
       MoaIMFLocalization.text("menu.checkForUpdates")
     case .checking:
       MoaIMFLocalization.text("menu.updateChecking")
-    case .current:
-      MoaIMFLocalization.text("menu.updateCurrent")
-    case .available:
-      String(
-        format: MoaIMFLocalization.text("menu.updateAvailable"),
-        controller.availableUpdate?.version ?? ""
-      )
     case .downloading:
       MoaIMFLocalization.text("menu.updateDownloading")
-    case .downloaded:
-      MoaIMFLocalization.text("menu.checkForUpdates")
     case .failed:
       MoaIMFLocalization.text("menu.updateFailed")
     }
   }
-}
 
-struct LoginItemStatusView: View {
-  let state: LoginItemState
-  @ObservedObject private var languageManager: LanguageManager
-
-  init(
-    state: LoginItemState,
-    languageManager: LanguageManager = .shared
-  ) {
-    self.state = state
-    self.languageManager = languageManager
+  var automaticDownloadCandidate: AppUpdate? {
+    guard controller.updateCheckStatus != .downloading,
+      controller.updateCheckStatus != .downloaded,
+      controller.updateCheckStatus != .failed
+    else {
+      return nil
+    }
+    return controller.automaticAvailableUpdate
   }
 
-  var body: some View {
-    let language = languageManager.selection
-
-    Label(
-      MoaIMFLocalization.text(state.menuLocalizationKey),
-      systemImage: state.menuSystemImage
+  private var updateCheckButton: some View {
+    Button(updateCheckTitle) {
+      checkForUpdatesManually()
+    }
+    .disabled(
+      controller.updateCheckStatus == .checking
+        || controller.updateCheckStatus == .downloading
     )
-    .id("\(state)-\(language.rawValue)")
-    .font(.caption)
-    .foregroundStyle(.secondary)
+  }
+
+  private func checkForUpdatesManually() {
+    Task {
+      guard let result = await controller.checkForUpdates() else {
+        showManualUpdateFailureIfNeeded()
+        return
+      }
+      switch result {
+      case .current:
+        AppWindowManager.shared.showUpdateCurrent(languageManager: languageManager)
+      case .available(let update):
+        AppWindowManager.shared.showUpdateAvailable(
+          update: update,
+          languageManager: languageManager
+        ) {
+          downloadAvailableUpdate()
+        }
+      }
+    }
+  }
+
+  private func showManualUpdateFailureIfNeeded() {
+    guard controller.updateCheckStatus == .failed else { return }
+    AppWindowManager.shared.showUpdateFailure(
+      message: controller.updateErrorMessage
+        ?? MoaIMFLocalization.text("menu.updateFailed"),
+      languageManager: languageManager,
+      onRetry: { checkForUpdatesManually() }
+    )
+  }
+
+  private func downloadAvailableUpdate() {
+    Task { await controller.downloadAvailableUpdate() }
   }
 }

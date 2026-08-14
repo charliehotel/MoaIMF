@@ -27,7 +27,7 @@ struct MenuBarIconLabel: View {
 }
 
 @MainActor
-private enum MenuBarIconAssets {
+enum MenuBarIconAssets {
   static let frames: [NSImage?] = (0...3).map { loadFrame($0) }
   private static let logicalSize = NSSize(width: 18, height: 18)
 

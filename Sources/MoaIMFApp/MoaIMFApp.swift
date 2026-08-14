@@ -5,9 +5,12 @@ import SwiftUI
 @main
 @MainActor
 struct MoaIMFApp: App {
+  @NSApplicationDelegateAdaptor(MoaIMFApplicationDelegate.self)
+  private var applicationDelegate
   private let preferences: UserDefaultsAppPreferences
   @StateObject private var controller: AppController
   @StateObject private var languageManager: LanguageManager
+  private let menuBarController: MenuBarStatusItemController
 
   init() {
     let preferences = UserDefaultsAppPreferences()
@@ -22,40 +25,28 @@ struct MoaIMFApp: App {
     self.preferences = preferences
     _controller = StateObject(wrappedValue: controller)
     _languageManager = StateObject(wrappedValue: languageManager)
+    menuBarController = MenuBarStatusItemController(
+      controller: controller,
+      languageManager: languageManager
+    )
+    AppWindowManager.shared.showLaunchHintIfNeeded(
+      preferences: preferences,
+      languageManager: languageManager
+    )
+    Task { await controller.load() }
   }
 
   var body: some Scene {
-    let _ = languageManager.selection
-
-    MenuBarExtra {
-      MenuBarView(controller: controller)
+    Settings {
+      SettingsView(controller: controller, languageManager: languageManager)
         .task { await controller.load() }
-    } label: {
-      Label {
-        Text("MoaIMF, \(MoaIMFLocalization.text(controller.status.localizationKey))")
-      } icon: {
-        MenuBarIconLabel(controller: controller)
-      }
-      .labelStyle(.iconOnly)
-      .onAppear {
-        AppWindowManager.shared.showLaunchHintIfNeeded(
-          preferences: preferences,
-          languageManager: languageManager
-        )
-      }
     }
-    .menuBarExtraStyle(.menu)
     .commands {
       CommandGroup(replacing: .appInfo) {
         Button(MoaIMFLocalization.text("menu.about")) {
           AppWindowManager.shared.showAbout(languageManager: languageManager)
         }
       }
-    }
-
-    Settings {
-      SettingsView(controller: controller, languageManager: languageManager)
-        .task { await controller.load() }
     }
 
     Window(MoaIMFLocalization.text("history.title"), id: "history") {

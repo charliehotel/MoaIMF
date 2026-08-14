@@ -30,8 +30,8 @@ MoaIMF is quiet, trustworthy, native, and reversible. It must feel like a macOS 
 
 ## 5. Components
 
-- `MenuBarExtra` uses menu style for status and frequent commands.
-- The update menu entry provides a manual `업데이트 확인` action, checks GitHub Releases once per day while the app is running, and shows a neighboring `arrow.down.circle` download action only when a newer DMG or ZIP is available. Checking, current, downloading, downloaded, and failure states use explicit text; downloading never installs or replaces the running app.
+- `MenuBarExtra` uses menu style for frequent commands; watching and login-item state are conveyed by the pause/resume command and the login toggle checkmark rather than duplicate status rows.
+- The update menu entry always keeps a manual `업데이트 확인` action. Every manual check opens a native result window: the current state confirms that MoaIMF is up to date, an available update shows its release tag, the complete GitHub release notes, and a download action, and a failed check explains the error. A daily automatic check never opens that window and instead exposes only a neighboring `arrow.down.circle` download action when a newer DMG or ZIP is available. Checking, downloading, downloaded, and failure states use explicit text; downloading never installs or replaces the running app.
 - The menu includes an About MoaIMF command that opens a concise native window with app identity,
   version/build, local-only filename-normalization description, and copyright.
 - The menu includes an in-app language selector for System Default, English, and Korean. Manual
@@ -52,9 +52,8 @@ MoaIMF is quiet, trustworthy, native, and reversible. It must feel like a macOS 
   field before the log list. Search narrows the already scoped/type-filtered results by localized
   title, reason, root, and previous/resulting file paths, treating NFC/NFD spelling variants as the
   same user-visible query.
-- The login-at-launch menu control pairs the toggle with a visible registration status label, so
-  the user can tell whether the login item is registered, disabled, unavailable, or waiting for
-  System Settings approval.
+- The login-at-launch menu control uses the native toggle checkmark as its state indicator. If
+  macOS requires approval, the menu exposes a separate System Settings command.
 - Plus and minus buttons follow the standard macOS list editing pattern.
 - Alerts state what was not changed and why; safe, non-mutating scans require no confirmation.
 - Status mapping:
