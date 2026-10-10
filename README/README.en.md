@@ -38,17 +38,17 @@ This is the main menu bar app screen. While folder monitoring is active, the men
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="MoaIMF Korean menu bar animation" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="MoaIMF Korean menu bar animation" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="MoaIMF English menu bar screen" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="MoaIMF English menu bar screen" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### Watched Folder Settings
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="Monitoring folders" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="Monitoring folders" width="100%"></kbd>
 
 Watched folder settings start with `Downloads` as the default folder. You can add or remove watched folders with the `+` and `-` buttons. Each folder can be enabled or disabled independently, and folders with broken permissions can be selected again.
 
@@ -56,7 +56,7 @@ Pressing `Scan Now` for a folder immediately scans that folder. The scan result 
 
 ### Download Stability Exceptions
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="Download stability exceptions" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="Download stability exceptions" width="100%"></kbd>
 
 Files that are still downloading may not have their final names yet, or their file size and modification time may still be changing. MoaIMF provides built-in locked rules for patterns such as `.crdownload`, `.download`, `.part`, `.partial`, and `.tmp`, and lets users add their own exception rules.
 
@@ -70,7 +70,7 @@ Items matched by an exception rule are not processed until the rule is removed o
 
 ### Recent History
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="Recent history" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="Recent history" width="100%"></kbd>
 
 Recent history can be viewed by today, 7 days, 30 days, or all time, and filtered by rename, conflict, permission, or error events. The search field looks at file paths, processing reasons, event titles, and root identifiers. It also compares normalized variants so that NFC/NFD spelling differences are treated as the same user input.
 
@@ -84,7 +84,7 @@ History is kept for 30 days by default. Old entries past the retention period ar
 
 ### About
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="About MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="About MoaIMF" width="100%"></kbd>
 
 The About window shows the app name, version, short description, and copyright notice. The image at the top illustrates decomposed jamo being combined into a composed character, as in `ㅎㅏㄴ -> 한`.
 

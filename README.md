@@ -38,17 +38,17 @@ MoaIMF는 이 문제를 “한 번 고치는 일회성 스크립트”로 보지
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="Screenshots/MoaIMF_main_ko.gif" alt="MoaIMF 한국어 메뉴 막대 동작 화면" width="100%"></kbd>
+      <kbd><img src="Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="MoaIMF 한국어 메뉴 막대 동작 화면" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="Screenshots/MoaIMF_main_en.png" alt="MoaIMF 영어 메뉴 막대 화면" width="100%"></kbd>
+      <kbd><img src="Screenshots/v0.1.0/MoaIMF_main_en.png" alt="MoaIMF 영어 메뉴 막대 화면" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### 감시 폴더 설정
 
-<kbd><img src="Screenshots/MoaIMF_monitoring_folders_ko.png" alt="감시 폴더 설정" width="100%"></kbd>
+<kbd><img src="Screenshots/v0.1.0/MoaIMF_monitoring_folders_ko.png" alt="감시 폴더 설정" width="100%"></kbd>
 
 감시 폴더 설정은 기본값인 `Downloads` 폴더에서 시작합니다. 사용자는 `+`와 `-` 버튼으로 감시 폴더를 추가하거나 제거합니다. 각 폴더는 따로 활성화하거나 비활성화하고, 권한이 끊어진 폴더는 다시 선택합니다.
 
@@ -56,7 +56,7 @@ MoaIMF는 이 문제를 “한 번 고치는 일회성 스크립트”로 보지
 
 ### 다운로드 안정화 예외
 
-<kbd><img src="Screenshots/MoaIMF_exceptions_ko.png" alt="다운로드 안정화 예외" width="100%"></kbd>
+<kbd><img src="Screenshots/v0.1.0/MoaIMF_exceptions_ko.png" alt="다운로드 안정화 예외" width="100%"></kbd>
 
 다운로드 중인 파일은 이름이 아직 확정되지 않았거나 파일 크기와 수정 시간이 계속 바뀌는 상태일 수 있습니다. MoaIMF는 `.crdownload`, `.download`, `.part`, `.partial`, `.tmp` 같은 기본 규칙을 잠긴 규칙으로 제공하며, 사용자가 직접 예외 규칙을 추가하게 합니다.
 
@@ -70,7 +70,7 @@ MoaIMF는 이 문제를 “한 번 고치는 일회성 스크립트”로 보지
 
 ### 최근 기록
 
-<kbd><img src="Screenshots/MoaIMF_recent_history_ko.png" alt="최근 기록" width="100%"></kbd>
+<kbd><img src="Screenshots/v0.1.0/MoaIMF_recent_history_ko.png" alt="최근 기록" width="100%"></kbd>
 
 최근 기록은 오늘, 7일, 30일, 전체 기간 단위로 볼 수 있으며 변경·충돌·권한·오류 유형으로 필터링합니다. 검색창은 파일 경로, 처리 사유, 이벤트 제목, 루트 식별자를 대상으로 검색하고, NFC/NFD 철자 차이를 같은 사용자 입력으로 취급하도록 정규화 변형도 함께 비교합니다.
 
@@ -84,7 +84,7 @@ MoaIMF는 이 문제를 “한 번 고치는 일회성 스크립트”로 보지
 
 ### 앱 정보
 
-<kbd><img src="Screenshots/MoaIMF_about_ko.png" alt="MoaIMF 정보" width="100%"></kbd>
+<kbd><img src="Screenshots/v0.1.0/MoaIMF_about_ko.png" alt="MoaIMF 정보" width="100%"></kbd>
 
 About 창에는 앱 이름, 버전, 간단한 설명, 저작권 표시가 나옵니다. 상단 이미지는 `ㅎㅏㄴ → 한`처럼 분리된 자모가 완성형 글자로 합쳐지는 개념을 보여줍니다.
 

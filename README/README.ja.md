@@ -38,17 +38,17 @@ MoaIMF はこの問題を一度だけ実行するクリーンアップスクリ�
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="MoaIMF 韓国語メニューバーアニメーション" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="MoaIMF 韓国語メニューバーアニメーション" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="MoaIMF 英語メニューバー画面" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="MoaIMF 英語メニューバー画面" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### 監視フォルダ設定
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="監視フォルダ設定" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="監視フォルダ設定" width="100%"></kbd>
 
 監視フォルダ設定は、初期値として `Downloads` フォルダから始まります。`+` と `-` ボタンで監視フォルダを追加または削除できます。各フォルダは個別に有効化・無効化でき、権限が切れたフォルダは再選択できます。
 
@@ -56,7 +56,7 @@ MoaIMF はこの問題を一度だけ実行するクリーンアップスクリ�
 
 ### ダウンロード安定化の例外
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="ダウンロード安定化の例外" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="ダウンロード安定化の例外" width="100%"></kbd>
 
 ダウンロード中のファイルは、名前がまだ確定していなかったり、ファイルサイズや更新時刻が変化し続けていたりします。MoaIMF は `.crdownload`、`.download`、`.part`、`.partial`、`.tmp` などの基本ルールをロックされたルールとして提供し、ユーザー独自の例外ルールも追加できます。
 
@@ -70,7 +70,7 @@ MoaIMF はこの問題を一度だけ実行するクリーンアップスクリ�
 
 ### 最近の履歴
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="最近の履歴" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="最近の履歴" width="100%"></kbd>
 
 最近の履歴は、今日、7日、30日、全期間で表示でき、変更、衝突、権限、エラーの種類で絞り込めます。検索欄はファイルパス、処理理由、イベントタイトル、ルート識別子を対象にし、NFC/NFD の表記差も同じ入力として扱うために正規化した候補も比較します。
 
@@ -84,7 +84,7 @@ MoaIMF はこの問題を一度だけ実行するクリーンアップスクリ�
 
 ### アプリ情報
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="MoaIMF について" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="MoaIMF について" width="100%"></kbd>
 
 About ウィンドウには、アプリ名、バージョン、短い説明、著作権表示が表示されます。上部の画像は、`ㅎㅏㄴ -> 한` のように分解された字母が合成済み文字になる概念を示しています。
 

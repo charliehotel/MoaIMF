@@ -73,11 +73,13 @@ public final class AppController: ObservableObject {
 
   public var isPaused: Bool { preferences.isPaused }
 
+  private static let historyDisplayLimit = 500
+
   public func load() async {
     do {
       folders = try await dataService.loadFolders()
       stabilityRules = try await dataService.loadRules()
-      history = try await dataService.loadHistory().sorted { $0.timestamp > $1.timestamp }
+      history = try await dataService.loadHistory(limit: Self.historyDisplayLimit).sorted { $0.timestamp > $1.timestamp }
       if preferences.isPaused {
         await scanController.pause()
       } else {
@@ -186,7 +188,7 @@ public final class AppController: ObservableObject {
           reports.append(report)
           self.folderScanReports[folder.id] = report
         }
-        self.history = try await self.dataService.loadHistory().sorted {
+        self.history = try await self.dataService.loadHistory(limit: Self.historyDisplayLimit).sorted {
           $0.timestamp > $1.timestamp
         }
         self.alert = nil

@@ -38,17 +38,17 @@ MoaIMF 不把这个问题当作一次性清理脚本来处理。它是一个仅�
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="MoaIMF 韩文菜单栏动画" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="MoaIMF 韩文菜单栏动画" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="MoaIMF 英文菜单栏界面" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="MoaIMF 英文菜单栏界面" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### 监视文件夹设置
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="监视文件夹设置" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="监视文件夹设置" width="100%"></kbd>
 
 监视文件夹设置以 `Downloads` 文件夹作为默认起点。你可以用 `+` 和 `-` 按钮添加或移除监视文件夹。每个文件夹都可以单独启用或停用，权限失效的文件夹也可以重新选择。
 
@@ -56,7 +56,7 @@ MoaIMF 不把这个问题当作一次性清理脚本来处理。它是一个仅�
 
 ### 下载稳定性例外
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="下载稳定性例外" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="下载稳定性例外" width="100%"></kbd>
 
 正在下载的文件可能还没有最终文件名，文件大小和修改时间也可能仍在变化。MoaIMF 将 `.crdownload`、`.download`、`.part`、`.partial`、`.tmp` 等基本规则作为锁定规则提供，并允许用户添加自己的例外规则。
 
@@ -70,7 +70,7 @@ MoaIMF 不把这个问题当作一次性清理脚本来处理。它是一个仅�
 
 ### 最近记录
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="最近记录" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="最近记录" width="100%"></kbd>
 
 最近记录可以按今天、7 天、30 天和全部时间查看，也可以按重命名、冲突、权限和错误类型筛选。搜索框会搜索文件路径、处理原因、事件标题和根标识符，并比较规范化变体，把 NFC/NFD 拼写差异视为同一用户输入。
 
@@ -84,7 +84,7 @@ MoaIMF 不把这个问题当作一次性清理脚本来处理。它是一个仅�
 
 ### 关于
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="关于 MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="关于 MoaIMF" width="100%"></kbd>
 
 About 窗口会显示应用名称、版本、简短说明和版权信息。顶部图片展示了像 `ㅎㅏㄴ -> 한` 这样把分解字母合成为完整字符的概念。
 

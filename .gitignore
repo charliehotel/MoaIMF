@@ -22,3 +22,4 @@ _workspace/
 # Local logs and runtime state
 *.log
 runtime-state/
+dist/

@@ -6,6 +6,7 @@ public protocol AppDataServicing: AnyObject {
   func loadFolders() async throws -> [AppFolder]
   func loadRules() async throws -> [StabilityExclusionRule]
   func loadHistory() async throws -> [HistoryEvent]
+  func loadHistory(limit: Int?) async throws -> [HistoryEvent]
   func addFolder(
     url: URL,
     mode: WatchedFolderNormalizationMode
@@ -16,6 +17,16 @@ public protocol AppDataServicing: AnyObject {
   func addRule(kind: StabilityRuleKind, pattern: String) async throws -> StabilityExclusionRule
   func removeRule(id: String) async throws
   func shutdown() async
+}
+
+extension AppDataServicing {
+  public func loadHistory(limit: Int?) async throws -> [HistoryEvent] {
+    let all = try await loadHistory()
+    if let limit, limit > 0, all.count > limit {
+      return Array(all.suffix(limit))
+    }
+    return all
+  }
 }
 
 @MainActor

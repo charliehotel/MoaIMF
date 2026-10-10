@@ -38,23 +38,23 @@ MoaIMF không coi đây là một script dọn dẹp chạy một lần. Ứng d
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="Hoạt ảnh thanh menu MoaIMF tiếng Hàn" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="Hoạt ảnh thanh menu MoaIMF tiếng Hàn" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="Màn hình thanh menu MoaIMF tiếng Anh" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="Màn hình thanh menu MoaIMF tiếng Anh" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### Cài đặt thư mục theo dõi
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="Cài đặt thư mục theo dõi" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="Cài đặt thư mục theo dõi" width="100%"></kbd>
 
 Cài đặt thư mục theo dõi bắt đầu từ `Downloads` theo mặc định. Bạn có thể thêm hoặc xóa thư mục bằng nút `+` và `-`. Mỗi thư mục có thể bật hoặc tắt riêng, và thư mục bị mất quyền có thể được chọn lại.
 
 ### Ngoại lệ ổn định tải xuống
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="Ngoại lệ ổn định tải xuống" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="Ngoại lệ ổn định tải xuống" width="100%"></kbd>
 
 Tệp đang tải xuống có thể chưa có tên cuối cùng, hoặc kích thước và thời gian sửa đổi vẫn đang thay đổi. MoaIMF cung cấp các quy tắc khóa sẵn cho `.crdownload`, `.download`, `.part`, `.partial`, `.tmp`, đồng thời cho phép thêm quy tắc ngoại lệ riêng.
 
@@ -62,7 +62,7 @@ Quy tắc tùy chỉnh hỗ trợ tên tệp chính xác, hậu tố hoặc ph�
 
 ### Lịch sử gần đây
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="Lịch sử gần đây" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="Lịch sử gần đây" width="100%"></kbd>
 
 Lịch sử gần đây có thể xem theo hôm nay, 7 ngày, 30 ngày hoặc toàn bộ thời gian, và lọc theo đổi tên, xung đột, quyền hoặc lỗi. Ô tìm kiếm so sánh cả biến thể chuẩn hóa để coi khác biệt NFC/NFD là cùng một nhập liệu.
 
@@ -72,7 +72,7 @@ Lịch sử gần đây có thể xem theo hôm nay, 7 ngày, 30 ngày hoặc to
 
 ### Giới thiệu ứng dụng
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="Giới thiệu MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="Giới thiệu MoaIMF" width="100%"></kbd>
 
 Cửa sổ About hiển thị tên ứng dụng, phiên bản, mô tả ngắn và bản quyền. Hình phía trên minh họa ý tưởng ghép jamo đã tách thành ký tự hoàn chỉnh, như `ㅎㅏㄴ -> 한`.
 

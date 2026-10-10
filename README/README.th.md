@@ -38,29 +38,29 @@ MoaIMF ไม่ใช่สคริปต์ล้างข้อมูลแ�
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="แอนิเมชันแถบเมนูภาษาเกาหลีของ MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="แอนิเมชันแถบเมนูภาษาเกาหลีของ MoaIMF" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="หน้าจอแถบเมนูภาษาอังกฤษของ MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="หน้าจอแถบเมนูภาษาอังกฤษของ MoaIMF" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### โฟลเดอร์ที่เฝ้าดู
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="การตั้งค่าโฟลเดอร์ที่เฝ้าดู" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="การตั้งค่าโฟลเดอร์ที่เฝ้าดู" width="100%"></kbd>
 
 ค่าเริ่มต้นคือโฟลเดอร์ `Downloads` ใช้ปุ่ม `+` และ `-` เพื่อเพิ่มหรือลบโฟลเดอร์ แต่ละโฟลเดอร์เปิดหรือปิดแยกกันได้
 
 ### ข้อยกเว้นความเสถียรของการดาวน์โหลด
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="ข้อยกเว้นความเสถียรของการดาวน์โหลด" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="ข้อยกเว้นความเสถียรของการดาวน์โหลด" width="100%"></kbd>
 
 ไฟล์ที่กำลังดาวน์โหลดอาจยังไม่มีชื่อสุดท้าย หรือขนาดไฟล์และเวลาแก้ไขยังเปลี่ยนอยู่ MoaIMF มี rule ที่ล็อกไว้สำหรับ `.crdownload`, `.download`, `.part`, `.partial`, `.tmp` และให้ผู้ใช้เพิ่ม rule เองได้
 
 ### ประวัติล่าสุด
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="ประวัติล่าสุด" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="ประวัติล่าสุด" width="100%"></kbd>
 
 ดูประวัติได้ตามวันนี้ 7 วัน 30 วัน หรือทั้งหมด และกรองตามการเปลี่ยนชื่อ conflict permission หรือ error ได้ การค้นหาจะเทียบรูปแบบที่ normalize แล้วด้วย เพื่อมองความต่าง NFC/NFD เป็นอินพุตเดียวกัน
 
@@ -70,7 +70,7 @@ MoaIMF ไม่ใช่สคริปต์ล้างข้อมูลแ�
 
 ### เกี่ยวกับ
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="เกี่ยวกับ MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="เกี่ยวกับ MoaIMF" width="100%"></kbd>
 
 หน้าต่าง About แสดงชื่อแอป เวอร์ชัน คำอธิบายสั้น และลิขสิทธิ์ ภาพด้านบนแสดงแนวคิดการรวม jamo ที่แยกอยู่ให้เป็นอักขระเดียว เช่น `ㅎㅏㄴ -> 한`
 

@@ -38,29 +38,29 @@ Pantalla principal de la app. Mientras vigila carpetas, el icono de la barra de 
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="Animación coreana de la barra de menús de MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="Animación coreana de la barra de menús de MoaIMF" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="Pantalla inglesa de la barra de menús de MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="Pantalla inglesa de la barra de menús de MoaIMF" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### Carpetas vigiladas
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="Ajustes de carpetas vigiladas" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="Ajustes de carpetas vigiladas" width="100%"></kbd>
 
 Los ajustes empiezan con `Downloads` como carpeta predeterminada. Los botones `+` y `-` agregan o eliminan carpetas vigiladas. Cada carpeta puede activarse o desactivarse por separado.
 
 ### Excepciones de estabilidad de descargas
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="Excepciones de estabilidad de descargas" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="Excepciones de estabilidad de descargas" width="100%"></kbd>
 
 Un archivo en descarga puede no tener todavía su nombre final, o puede seguir cambiando de tamaño y fecha de modificación. MoaIMF incluye reglas bloqueadas para `.crdownload`, `.download`, `.part`, `.partial`, `.tmp` y permite reglas personalizadas.
 
 ### Historial reciente
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="Historial reciente" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="Historial reciente" width="100%"></kbd>
 
 El historial puede verse por hoy, 7 días, 30 días o todo el tiempo, y filtrarse por renombrados, conflictos, permisos o errores. La búsqueda también compara variantes normalizadas para tratar diferencias NFC/NFD como la misma entrada.
 
@@ -70,7 +70,7 @@ El historial puede verse por hoy, 7 días, 30 días o todo el tiempo, y filtrars
 
 ### Acerca de
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="Acerca de MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="Acerca de MoaIMF" width="100%"></kbd>
 
 La ventana About muestra nombre, versión, descripción breve y copyright. La imagen ilustra cómo jamo descompuestos se combinan en un carácter compuesto, como `ㅎㅏㄴ -> 한`.
 

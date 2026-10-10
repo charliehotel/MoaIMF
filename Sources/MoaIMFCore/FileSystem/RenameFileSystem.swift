@@ -17,7 +17,79 @@ enum RenameFileSystemError: Error, LocalizedError {
   }
 }
 
+final class DirectoryEntryCache: @unchecked Sendable {
+  private let lock = NSLock()
+  private var cache: [URL: Set<String>] = [:]
+
+  func names(in directory: URL) throws -> Set<String> {
+    lock.lock()
+    if let cached = cache[directory] {
+      lock.unlock()
+      return cached
+    }
+    lock.unlock()
+
+    let freshList = try RawDirectoryReader().names(in: directory)
+    let freshSet = Set(freshList)
+    lock.lock()
+    cache[directory] = freshSet
+    lock.unlock()
+    return freshSet
+  }
+
+  func contains(_ name: String, in directory: URL) throws -> Bool {
+    try names(in: directory).contains(where: { $0.utf8.elementsEqual(name.utf8) })
+  }
+
+  func findRawName(matching name: String, in directory: URL) throws -> String? {
+    try names(in: directory).first(where: { $0.utf8.elementsEqual(name.utf8) })
+  }
+
+  func didRename(from oldName: String, to newName: String, in directory: URL) {
+    lock.lock()
+    defer { lock.unlock() }
+    guard var names = cache[directory] else { return }
+    names = names.filter { !$0.utf8.elementsEqual(oldName.utf8) }
+    names.insert(newName)
+    cache[directory] = names
+  }
+
+  func didRemove(_ name: String, in directory: URL) {
+    lock.lock()
+    defer { lock.unlock() }
+    guard var names = cache[directory] else { return }
+    names = names.filter { !$0.utf8.elementsEqual(name.utf8) }
+    cache[directory] = names
+  }
+
+  func didInsert(_ name: String, in directory: URL) {
+    lock.lock()
+    defer { lock.unlock() }
+    guard var names = cache[directory] else { return }
+    names.insert(name)
+    cache[directory] = names
+  }
+
+  func invalidate(directory: URL) {
+    lock.lock()
+    defer { lock.unlock() }
+    cache.removeValue(forKey: directory)
+  }
+
+  func clear() {
+    lock.lock()
+    defer { lock.unlock() }
+    cache.removeAll()
+  }
+}
+
 struct RenameFileSystem: Sendable {
+  private let cache: DirectoryEntryCache?
+
+  init(cache: DirectoryEntryCache? = nil) {
+    self.cache = cache
+  }
+
   func preflight(_ candidate: RenameCandidate) throws -> URL {
     let parent = candidate.source.deletingLastPathComponent()
     let sourceName = candidate.source.lastPathComponent
@@ -73,20 +145,51 @@ struct RenameFileSystem: Sendable {
 
   func moveExclusively(from source: URL, to target: URL) throws {
     try moveExclusively(from: pathBytes(for: source), to: pathBytes(for: target))
+    if let cache {
+      let sourceParent = source.deletingLastPathComponent()
+      let targetParent = target.deletingLastPathComponent()
+      if sourceParent == targetParent {
+        cache.didRename(from: source.lastPathComponent, to: target.lastPathComponent, in: sourceParent)
+      } else {
+        cache.didRemove(source.lastPathComponent, in: sourceParent)
+        cache.didInsert(target.lastPathComponent, in: targetParent)
+      }
+    }
   }
 
   func moveExclusively(from source: URL, toParent parent: URL, rawName: String) throws {
     try moveExclusively(
       from: pathBytes(for: source), to: siblingPathBytes(parent: parent, rawName: rawName))
+    if let cache {
+      let sourceParent = source.deletingLastPathComponent()
+      if sourceParent == parent {
+        cache.didRename(from: source.lastPathComponent, to: rawName, in: parent)
+      } else {
+        cache.didRemove(source.lastPathComponent, in: sourceParent)
+        cache.didInsert(rawName, in: parent)
+      }
+    }
   }
 
   func moveExclusively(fromParent parent: URL, rawName: String, to target: URL) throws {
     try moveExclusively(
       from: siblingPathBytes(parent: parent, rawName: rawName), to: pathBytes(for: target))
+    if let cache {
+      let targetParent = target.deletingLastPathComponent()
+      if parent == targetParent {
+        cache.didRename(from: rawName, to: target.lastPathComponent, in: parent)
+      } else {
+        cache.didRemove(rawName, in: parent)
+        cache.didInsert(target.lastPathComponent, in: targetParent)
+      }
+    }
   }
 
   func rawNames(in directory: URL) throws -> [String] {
-    try RawDirectoryReader().names(in: directory)
+    if let cache {
+      return try Array(cache.names(in: directory))
+    }
+    return try RawDirectoryReader().names(in: directory)
   }
 
   func sameDirectory(_ left: URL, _ right: URL) -> Bool {

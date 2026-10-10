@@ -48,8 +48,12 @@ public final class LocalAppDataService: AppDataServicing {
     try await ruleStore.allRules()
   }
 
+  public func loadHistory(limit: Int? = nil) async throws -> [HistoryEvent] {
+    try await historyStore.load(limit: limit).events
+  }
+
   public func loadHistory() async throws -> [HistoryEvent] {
-    try await historyStore.load().events
+    try await loadHistory(limit: nil)
   }
 
   public func addFolder(

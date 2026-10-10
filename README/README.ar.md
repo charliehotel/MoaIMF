@@ -38,29 +38,29 @@ MoaIMF ليس سكربت تنظيف يعمل مرة واحدة. إنه أداة 
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="تحريك شريط القوائم الكوري في MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="تحريك شريط القوائم الكوري في MoaIMF" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="شاشة شريط القوائم الإنجليزية في MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="شاشة شريط القوائم الإنجليزية في MoaIMF" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### المجلدات المراقبة
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="إعدادات المجلدات المراقبة" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="إعدادات المجلدات المراقبة" width="100%"></kbd>
 
 تبدأ الإعدادات بالمجلد `Downloads` افتراضياً. يمكن إضافة المجلدات أو إزالتها باستخدام `+` و `-`. يمكن تفعيل كل مجلد أو تعطيله بشكل مستقل.
 
 ### استثناءات استقرار التنزيل
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="استثناءات استقرار التنزيل" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="استثناءات استقرار التنزيل" width="100%"></kbd>
 
 قد لا يكون للملف الجاري تنزيله اسم نهائي بعد، وقد يستمر حجم الملف أو وقت تعديله في التغير. يوفر MoaIMF قواعد مقفلة لـ `.crdownload`, `.download`, `.part`, `.partial`, `.tmp`، ويسمح بإضافة قواعد مخصصة.
 
 ### السجل الحديث
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="السجل الحديث" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="السجل الحديث" width="100%"></kbd>
 
 يمكن عرض السجل حسب اليوم أو 7 أيام أو 30 يوماً أو كامل المدة، وتصفيته حسب إعادة التسمية أو التعارض أو الصلاحية أو الخطأ. يقارن البحث أيضاً المتغيرات المطبعة حتى تُعامل فروق NFC/NFD كإدخال واحد.
 
@@ -70,7 +70,7 @@ MoaIMF ليس سكربت تنظيف يعمل مرة واحدة. إنه أداة 
 
 ### حول التطبيق
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="حول MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="حول MoaIMF" width="100%"></kbd>
 
 تعرض نافذة About اسم التطبيق والإصدار ووصفاً قصيراً وحقوق النشر. توضح الصورة فكرة جمع jamo مفككة في حرف مركب، مثل `ㅎㅏㄴ -> 한`.
 

@@ -38,29 +38,29 @@ Während der Überwachung wechselt das Menüleistensymbol durch `ㅎ`, `ㅏ`, `�
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="MoaIMF koreanische Menüleistenanimation" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="MoaIMF koreanische Menüleistenanimation" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="MoaIMF englischer Menüleistenbildschirm" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="MoaIMF englischer Menüleistenbildschirm" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### Überwachte Ordner
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="Einstellungen für überwachte Ordner" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="Einstellungen für überwachte Ordner" width="100%"></kbd>
 
 Die Einstellungen starten standardmäßig mit `Downloads`. Mit `+` und `-` können überwachte Ordner hinzugefügt oder entfernt werden. Jeder Ordner kann einzeln aktiviert oder deaktiviert werden.
 
 ### Download-Stabilitätsausnahmen
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="Download-Stabilitätsausnahmen" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="Download-Stabilitätsausnahmen" width="100%"></kbd>
 
 Dateien im Download können noch keinen endgültigen Namen haben oder weiterhin Größe und Änderungszeit ändern. MoaIMF bietet gesperrte Regeln für `.crdownload`, `.download`, `.part`, `.partial`, `.tmp` und erlaubt eigene Ausnahmeregeln.
 
 ### Verlauf
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="Aktueller Verlauf" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="Aktueller Verlauf" width="100%"></kbd>
 
 Der Verlauf kann nach Heute, 7 Tagen, 30 Tagen oder Gesamtzeit angezeigt und nach Umbenennungen, Konflikten, Berechtigungen oder Fehlern gefiltert werden.
 
@@ -70,7 +70,7 @@ Der Verlauf kann nach Heute, 7 Tagen, 30 Tagen oder Gesamtzeit angezeigt und nac
 
 ### Info
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="Über MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="Über MoaIMF" width="100%"></kbd>
 
 Das About-Fenster zeigt App-Name, Version, Kurzbeschreibung und Copyright. Die Grafik zeigt, wie zerlegte Jamo wie `ㅎㅏㄴ -> 한` zu einem zusammengesetzten Zeichen werden.
 

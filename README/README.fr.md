@@ -38,29 +38,29 @@ MoaIMF n’est pas un script de nettoyage ponctuel. C’est un utilitaire local 
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="Animation coréenne de la barre des menus MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="Animation coréenne de la barre des menus MoaIMF" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="Écran anglais de la barre des menus MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="Écran anglais de la barre des menus MoaIMF" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### Dossiers surveillés
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="Réglages des dossiers surveillés" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="Réglages des dossiers surveillés" width="100%"></kbd>
 
 Les réglages commencent avec `Downloads` comme dossier par défaut. Les boutons `+` et `-` ajoutent ou retirent des dossiers. Chaque dossier peut être activé ou désactivé indépendamment, et un dossier dont l’autorisation a expiré peut être sélectionné de nouveau.
 
 ### Exceptions de stabilité des téléchargements
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="Exceptions de stabilité des téléchargements" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="Exceptions de stabilité des téléchargements" width="100%"></kbd>
 
 Un fichier en cours de téléchargement peut ne pas encore avoir son nom final, et sa taille ou sa date de modification peut encore changer. MoaIMF fournit des règles verrouillées pour `.crdownload`, `.download`, `.part`, `.partial`, `.tmp`, et permet d’ajouter des règles personnalisées.
 
 ### Historique récent
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="Historique récent" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="Historique récent" width="100%"></kbd>
 
 L’historique peut être consulté pour aujourd’hui, 7 jours, 30 jours ou toute la période, puis filtré par renommage, conflit, autorisation ou erreur. La recherche compare aussi des variantes normalisées afin de traiter les différences NFC/NFD comme une même saisie.
 
@@ -70,7 +70,7 @@ L’historique peut être consulté pour aujourd’hui, 7 jours, 30 jours ou tou
 
 ### À propos
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="À propos de MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="À propos de MoaIMF" width="100%"></kbd>
 
 La fenêtre About affiche le nom de l’app, la version, une courte description et les informations de copyright. L’image illustre la combinaison de jamo décomposés en caractère composé, comme `ㅎㅏㄴ -> 한`.
 

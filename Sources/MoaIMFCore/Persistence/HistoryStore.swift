@@ -64,6 +64,7 @@ public actor HistoryStore {
   private let fileURL: URL
   private let retentionInterval: TimeInterval
   private let now: @Sendable () -> Date
+  private var lastPruneDate: Date?
 
   public init(
     fileURL: URL,
@@ -95,6 +96,35 @@ public actor HistoryStore {
     return event
   }
 
+  public func recordBatch(_ events: [HistoryEvent]) throws {
+    guard !events.isEmpty else { return }
+    try FileManager.default.createDirectory(
+      at: fileURL.deletingLastPathComponent(),
+      withIntermediateDirectories: true
+    )
+    if !FileManager.default.fileExists(atPath: fileURL.path) {
+      try Data().write(to: fileURL, options: .atomic)
+    }
+    let handle = try FileHandle(forWritingTo: fileURL)
+    do {
+      try handle.seekToEnd()
+      var batchData = Data()
+      for event in events {
+        var data = try encoder().encode(event)
+        data.append(0x0A)
+        batchData.append(data)
+      }
+      try handle.write(contentsOf: batchData)
+      try handle.synchronize()
+      try handle.close()
+    } catch {
+      let writeError = error
+      try? handle.close()
+      throw writeError
+    }
+    try pruneIfNeeded(referenceDate: now())
+  }
+
   public func append(_ event: HistoryEvent) throws {
     try FileManager.default.createDirectory(
       at: fileURL.deletingLastPathComponent(),
@@ -120,14 +150,28 @@ public actor HistoryStore {
       }
       throw writeError
     }
-    try prune(referenceDate: now())
+    try pruneIfNeeded(referenceDate: now())
   }
 
-  public func load() throws -> HistoryLoadResult {
+  public func pruneIfNeeded(referenceDate: Date, force: Bool = false) throws {
+    if !force, let lastPrune = lastPruneDate, referenceDate.timeIntervalSince(lastPrune) < 3600 {
+      return
+    }
+    try prune(referenceDate: referenceDate)
+    lastPruneDate = referenceDate
+  }
+
+  public func load(limit: Int? = nil) throws -> HistoryLoadResult {
     let lines = try readLines()
     var events: [HistoryEvent] = []
     var diagnostics: [HistoryDiagnostic] = []
-    for (index, line) in lines.enumerated() {
+    let targetLines: [Data]
+    if let limit, limit > 0, lines.count > limit {
+      targetLines = Array(lines.suffix(limit))
+    } else {
+      targetLines = lines
+    }
+    for (index, line) in targetLines.enumerated() {
       do {
         let event = try decoder().decode(HistoryEvent.self, from: line)
         guard event.schemaVersion == 1 else {

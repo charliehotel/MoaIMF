@@ -176,9 +176,10 @@ public actor NormalizationScanService: ScanServicing {
   }
 
   private func record(collisions: [NormalizationCollision], root: URL) async throws {
-    for collision in collisions {
-      try Task.checkCancellation()
-      _ = try await history.record(
+    let now = Date()
+    let events = collisions.map { collision in
+      HistoryEvent(
+        timestamp: now,
         kind: .collision,
         rootIdentifier: root.path,
         previousURL: collision.parent,
@@ -186,13 +187,15 @@ public actor NormalizationScanService: ScanServicing {
         reason: collision.rawNames.joined(separator: ", ")
       )
     }
+    try await history.recordBatch(events)
   }
 
   private func record(outcomes: [RenameOutcome], root: URL) async throws {
-    for outcome in outcomes {
-      try Task.checkCancellation()
+    let now = Date()
+    let events = outcomes.map { outcome in
       let kind: HistoryEventKind = outcome.kind == .renamed ? .renamed : .error
-      _ = try await history.record(
+      return HistoryEvent(
+        timestamp: now,
         kind: kind,
         rootIdentifier: root.path,
         previousURL: outcome.source,
@@ -200,5 +203,6 @@ public actor NormalizationScanService: ScanServicing {
         reason: outcome.reason ?? outcome.kind.rawValue
       )
     }
+    try await history.recordBatch(events)
   }
 }

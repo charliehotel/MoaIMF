@@ -38,17 +38,17 @@ MoaIMF 不把這個問題視為一次性的清理腳本。它是只在本機執�
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="MoaIMF 韓文選單列動畫" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="MoaIMF 韓文選單列動畫" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="MoaIMF 英文選單列畫面" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="MoaIMF 英文選單列畫面" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### 監視資料夾設定
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="監視資料夾設定" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="監視資料夾設定" width="100%"></kbd>
 
 監視資料夾設定以 `Downloads` 資料夾作為預設起點。你可以用 `+` 與 `-` 按鈕新增或移除監視資料夾。每個資料夾都可以個別啟用或停用，權限中斷的資料夾也可以重新選擇。
 
@@ -56,7 +56,7 @@ MoaIMF 不把這個問題視為一次性的清理腳本。它是只在本機執�
 
 ### 下載穩定性例外
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="下載穩定性例外" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="下載穩定性例外" width="100%"></kbd>
 
 正在下載的檔案可能尚未確定最終名稱，檔案大小與修改時間也可能持續變動。MoaIMF 將 `.crdownload`、`.download`、`.part`、`.partial`、`.tmp` 等基本規則作為鎖定規則提供，並允許使用者新增自己的例外規則。
 
@@ -70,7 +70,7 @@ MoaIMF 不把這個問題視為一次性的清理腳本。它是只在本機執�
 
 ### 最近記錄
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="最近記錄" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="最近記錄" width="100%"></kbd>
 
 最近記錄可依今天、7 天、30 天、全部期間查看，也可以依重新命名、衝突、權限、錯誤類型篩選。搜尋欄會搜尋檔案路徑、處理原因、事件標題和根識別碼，並比較正規化變體，把 NFC/NFD 拼寫差異視為同一個使用者輸入。
 
@@ -84,7 +84,7 @@ MoaIMF 不把這個問題視為一次性的清理腳本。它是只在本機執�
 
 ### 關於
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="關於 MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="關於 MoaIMF" width="100%"></kbd>
 
 About 視窗會顯示 App 名稱、版本、簡短說明和著作權資訊。上方圖片展示了像 `ㅎㅏㄴ -> 한` 這樣將分解字母合成完整字元的概念。
 

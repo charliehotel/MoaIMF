@@ -24,17 +24,20 @@ struct RenameEngineHooks: Sendable {
 public actor SafeRenameEngine {
   let journal: RecoveryJournal
   private let hooks: RenameEngineHooks
-  let fileSystem = RenameFileSystem()
+  let fileSystem: RenameFileSystem
+  private let directoryCache = DirectoryEntryCache()
   private var unsupportedVolumes: Set<String> = []
 
   public init(journal: RecoveryJournal) {
     self.journal = journal
     hooks = RenameEngineHooks()
+    fileSystem = RenameFileSystem(cache: directoryCache)
   }
 
   init(journal: RecoveryJournal, hooks: RenameEngineHooks) {
     self.journal = journal
     self.hooks = hooks
+    fileSystem = RenameFileSystem(cache: directoryCache)
   }
 
   public func isVolumeUnsupported(_ volume: String) -> Bool {
@@ -42,6 +45,8 @@ public actor SafeRenameEngine {
   }
 
   public func apply(_ plan: NormalizationPlan) async throws -> [RenameOutcome] {
+    directoryCache.clear()
+    defer { directoryCache.clear() }
     let candidates = plan.candidates.sorted {
       let leftDepth = $0.source.pathComponents.count
       let rightDepth = $1.source.pathComponents.count

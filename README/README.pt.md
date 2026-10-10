@@ -38,29 +38,29 @@ Enquanto monitora pastas, o ícone da barra de menus passa por `ㅎ`, `ㅏ`, `�
 <table>
   <tr>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_ko.gif" alt="Animação coreana da barra de menus do MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_ko.gif" alt="Animação coreana da barra de menus do MoaIMF" width="100%"></kbd>
     </td>
     <td align="center" width="50%">
-      <kbd><img src="../Screenshots/MoaIMF_main_en.png" alt="Tela inglesa da barra de menus do MoaIMF" width="100%"></kbd>
+      <kbd><img src="../Screenshots/v0.1.0/MoaIMF_main_en.png" alt="Tela inglesa da barra de menus do MoaIMF" width="100%"></kbd>
     </td>
   </tr>
 </table>
 
 ### Pastas monitoradas
 
-<kbd><img src="../Screenshots/MoaIMF_monitoring_folders_en.png" alt="Configurações de pastas monitoradas" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_monitoring_folders_en.png" alt="Configurações de pastas monitoradas" width="100%"></kbd>
 
 As configurações começam com `Downloads` como pasta padrão. Os botões `+` e `-` adicionam ou removem pastas monitoradas. Cada pasta pode ser ativada ou desativada separadamente.
 
 ### Exceções de estabilidade de download
 
-<kbd><img src="../Screenshots/MoaIMF_exceptions_en.png" alt="Exceções de estabilidade de download" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_exceptions_en.png" alt="Exceções de estabilidade de download" width="100%"></kbd>
 
 Arquivos em download podem ainda não ter nome final, ou continuar mudando de tamanho e data de modificação. MoaIMF inclui regras bloqueadas para `.crdownload`, `.download`, `.part`, `.partial`, `.tmp` e permite regras personalizadas.
 
 ### Histórico recente
 
-<kbd><img src="../Screenshots/MoaIMF_recent_history_en.png" alt="Histórico recente" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_recent_history_en.png" alt="Histórico recente" width="100%"></kbd>
 
 O histórico pode ser visto por hoje, 7 dias, 30 dias ou todo o período, e filtrado por renomeação, conflito, permissão ou erro. A busca também compara variantes normalizadas para tratar diferenças NFC/NFD como a mesma entrada.
 
@@ -70,7 +70,7 @@ O histórico pode ser visto por hoje, 7 dias, 30 dias ou todo o período, e filt
 
 ### Sobre
 
-<kbd><img src="../Screenshots/MoaIMF_about_en.png" alt="Sobre o MoaIMF" width="100%"></kbd>
+<kbd><img src="../Screenshots/v0.1.0/MoaIMF_about_en.png" alt="Sobre o MoaIMF" width="100%"></kbd>
 
 A janela About mostra nome, versão, descrição curta e copyright. A imagem mostra jamo decompostos sendo combinados em um caractere composto, como `ㅎㅏㄴ -> 한`.
 
