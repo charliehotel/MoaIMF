@@ -58,8 +58,45 @@ public struct ScanContentSummary: Equatable, Sendable {
   }
 }
 
+public struct ScanServiceProgress: Equatable, Sendable {
+  public enum Phase: String, Equatable, Sendable {
+    case scanning
+    case normalizing
+  }
+
+  public let phase: Phase
+  public let completed: Int
+  public let total: Int
+  public let currentItemName: String?
+
+  public init(
+    phase: Phase,
+    completed: Int = 0,
+    total: Int = 0,
+    currentItemName: String? = nil
+  ) {
+    self.phase = phase
+    self.completed = completed
+    self.total = total
+    self.currentItemName = currentItemName
+  }
+}
+
 public protocol ScanServicing: Sendable {
   func scan(_ request: ScanRequest) async throws -> ScanServiceResult
+  func scan(
+    _ request: ScanRequest,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)?
+  ) async throws -> ScanServiceResult
+}
+
+extension ScanServicing {
+  public func scan(
+    _ request: ScanRequest,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)?
+  ) async throws -> ScanServiceResult {
+    try await scan(request)
+  }
 }
 
 public enum CoordinatorDelay: Equatable, Sendable {

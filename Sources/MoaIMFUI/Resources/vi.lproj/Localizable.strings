@@ -7,10 +7,13 @@
 "status.permissionRequired" = "Cần quyền truy cập";
 "status.disconnected" = "Không thể truy cập thư mục";
 "status.unsupported" = "Hành vi hệ thống tệp không được hỗ trợ";
+"status.scanningFiles" = "Đang quét tệp…";
+"status.normalizingProgress" = "Đang chuẩn hóa “%@” (%d/%d, %d%%)";
 "menu.about" = "Giới thiệu MoaIMF";
 "menu.pause" = "Tạm dừng theo dõi";
 "menu.resume" = "Tiếp tục theo dõi";
 "menu.scanAll" = "Quét tất cả ngay";
+"menu.progressNormalizing" = "Đang chuẩn hóa %@: %d/%d (%d%%)";
 "menu.settings" = "Cài đặt thư mục theo dõi…";
 "menu.history" = "Lịch sử gần đây…";
 "menu.loginAtLaunch" = "Mở khi đăng nhập";

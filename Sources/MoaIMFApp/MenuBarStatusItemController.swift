@@ -54,8 +54,22 @@ final class MenuBarStatusItemController: NSObject {
         accessibilityDescription: nil
       )
     statusItem.button?.image?.isTemplate = true
-    statusItem.button?.toolTip = MoaIMFLocalization.text(
-      controller.status.localizationKey
-    )
+    if let progress = controller.scanProgress {
+      let progressText =
+        progress.phase == .scanning
+        ? MoaIMFLocalization.text("status.scanningFiles")
+        : String(
+          format: MoaIMFLocalization.text("menu.progressNormalizing"),
+          progress.folderName,
+          progress.completed,
+          progress.total,
+          progress.percentage
+        )
+      statusItem.button?.toolTip = progressText
+    } else {
+      statusItem.button?.toolTip = MoaIMFLocalization.text(
+        controller.status.localizationKey
+      )
+    }
   }
 }

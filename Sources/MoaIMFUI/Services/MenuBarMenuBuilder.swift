@@ -56,6 +56,26 @@ public final class MenuBarMenuBuilder: NSObject {
     scanItem.keyEquivalentModifierMask = [.command]
     menu.addItem(scanItem)
 
+    if let progress = controller.scanProgress {
+      let progressTitle =
+        progress.phase == .scanning
+        ? MoaIMFLocalization.text("status.scanningFiles")
+        : String(
+          format: MoaIMFLocalization.text("menu.progressNormalizing"),
+          progress.folderName,
+          progress.completed,
+          progress.total,
+          progress.percentage
+        )
+      let progressItem = NSMenuItem(
+        title: progressTitle,
+        action: nil,
+        keyEquivalent: ""
+      )
+      progressItem.isEnabled = false
+      menu.addItem(progressItem)
+    }
+
     menu.addItem(.separator())
     menu.addItem(
       actionItem(

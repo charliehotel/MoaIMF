@@ -7,10 +7,13 @@
 "status.permissionRequired" = "Permission required";
 "status.disconnected" = "Folder unavailable";
 "status.unsupported" = "Unsupported filesystem behavior";
+"status.scanningFiles" = "Scanning files…";
+"status.normalizingProgress" = "Normalizing ‘%@’ (%d/%d, %d%%)";
 "menu.about" = "About MoaIMF";
 "menu.pause" = "Pause Watching";
 "menu.resume" = "Resume Watching";
 "menu.scanAll" = "Scan All Now";
+"menu.progressNormalizing" = "Normalizing %@: %d/%d (%d%%)";
 "menu.settings" = "Watched Folder Settings…";
 "menu.history" = "Recent History…";
 "menu.loginAtLaunch" = "Launch at Login";
@@ -87,6 +90,7 @@
 "history.emptySearch" = "No matching history";
 "history.title" = "Recent History";
 "history.resultSummary" = "%@ %@ logs: %d";
+"history.displayedOfTotal" = "Showing %d of %d records";
 "history.typeLabel" = "Type";
 "history.searchPlaceholder" = "Search";
 "alert.collision" = "Some names were not changed because they collide.";

@@ -21,6 +21,18 @@ struct RenameEngineHooks: Sendable {
   }
 }
 
+public struct RenameProgress: Equatable, Sendable {
+  public let completed: Int
+  public let total: Int
+  public let currentItemName: String
+
+  public init(completed: Int, total: Int, currentItemName: String) {
+    self.completed = completed
+    self.total = total
+    self.currentItemName = currentItemName
+  }
+}
+
 public actor SafeRenameEngine {
   let journal: RecoveryJournal
   private let hooks: RenameEngineHooks
@@ -44,7 +56,10 @@ public actor SafeRenameEngine {
     unsupportedVolumes.contains(volume)
   }
 
-  public func apply(_ plan: NormalizationPlan) async throws -> [RenameOutcome] {
+  public func apply(
+    _ plan: NormalizationPlan,
+    onProgress: (@Sendable (RenameProgress) -> Void)? = nil
+  ) async throws -> [RenameOutcome] {
     directoryCache.clear()
     defer { directoryCache.clear() }
     let candidates = plan.candidates.sorted {
@@ -53,7 +68,10 @@ public actor SafeRenameEngine {
       return leftDepth == rightDepth ? $0.source.path < $1.source.path : leftDepth > rightDepth
     }
     var outcomes: [RenameOutcome] = []
-    for candidate in candidates {
+    let total = candidates.count
+    var lastReported = Date.distantPast
+
+    for (index, candidate) in candidates.enumerated() {
       try Task.checkCancellation()
       let target = candidate.source.deletingLastPathComponent()
         .appendingPathComponent(candidate.targetName)
@@ -68,6 +86,20 @@ public actor SafeRenameEngine {
       }
       outcomes.append(outcome)
       await hooks.afterCandidate()
+      let now = Date()
+      if index == total - 1 || now.timeIntervalSince(lastReported) >= 0.05 {
+        lastReported = now
+        onProgress?(
+          RenameProgress(
+            completed: index + 1,
+            total: total,
+            currentItemName: candidate.source.lastPathComponent
+          ))
+      }
+    }
+
+    if total > 0 {
+      onProgress?(RenameProgress(completed: total, total: total, currentItemName: ""))
     }
     return outcomes
   }

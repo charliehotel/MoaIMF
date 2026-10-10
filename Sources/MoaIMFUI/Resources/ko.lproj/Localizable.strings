@@ -7,10 +7,13 @@
 "status.permissionRequired" = "권한 필요";
 "status.disconnected" = "폴더에 연결할 수 없음";
 "status.unsupported" = "지원되지 않는 파일시스템 동작";
+"status.scanningFiles" = "파일 목록 검색 중…";
+"status.normalizingProgress" = "‘%@’ 정규화 중 (%d/%d, %d%%)";
 "menu.about" = "MoaIMF에 관하여";
 "menu.pause" = "감시 일시정지";
 "menu.resume" = "감시 재개";
 "menu.scanAll" = "지금 모두 검사";
+"menu.progressNormalizing" = "%@ 정규화 중: %d/%d (%d%%)";
 "menu.settings" = "감시 폴더 설정…";
 "menu.history" = "최근 기록…";
 "menu.loginAtLaunch" = "로그인 시 자동 실행";
@@ -87,6 +90,7 @@
 "history.emptySearch" = "검색 결과 없음";
 "history.title" = "최근 기록";
 "history.resultSummary" = "%@ 발생한 %@ 로그 %d개";
+"history.displayedOfTotal" = "전체 %2$d개 중 %1$d개 표시 중";
 "history.typeLabel" = "유형";
 "history.searchPlaceholder" = "검색";
 "alert.collision" = "이름이 충돌하여 일부 항목을 변경하지 않았습니다.";

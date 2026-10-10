@@ -7,10 +7,13 @@
 "status.permissionRequired" = "ต้องมีสิทธิ์เข้าถึง";
 "status.disconnected" = "ใช้โฟลเดอร์ไม่ได้";
 "status.unsupported" = "พฤติกรรมระบบไฟล์ไม่รองรับ";
+"status.scanningFiles" = "กำลังสแกนไฟล์…";
+"status.normalizingProgress" = "กำลังปรับมาตรฐาน ‘%@’ (%d/%d, %d%%)";
 "menu.about" = "เกี่ยวกับ MoaIMF";
 "menu.pause" = "หยุดเฝ้าดูชั่วคราว";
 "menu.resume" = "เฝ้าดูต่อ";
 "menu.scanAll" = "สแกนทั้งหมดตอนนี้";
+"menu.progressNormalizing" = "กำลังปรับมาตรฐาน %@: %d/%d (%d%%)";
 "menu.settings" = "การตั้งค่าโฟลเดอร์ที่เฝ้าดู…";
 "menu.history" = "ประวัติล่าสุด…";
 "menu.loginAtLaunch" = "เปิดเมื่อเข้าสู่ระบบ";

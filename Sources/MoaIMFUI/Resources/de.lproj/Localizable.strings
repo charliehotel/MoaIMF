@@ -7,10 +7,13 @@
 "status.permissionRequired" = "Berechtigung erforderlich";
 "status.disconnected" = "Ordner nicht verfügbar";
 "status.unsupported" = "Nicht unterstütztes Dateisystemverhalten";
+"status.scanningFiles" = "Dateien werden gescannt…";
+"status.normalizingProgress" = "„%@“ wird normalisiert (%d/%d, %d%%)";
 "menu.about" = "Über MoaIMF";
 "menu.pause" = "Überwachung pausieren";
 "menu.resume" = "Überwachung fortsetzen";
 "menu.scanAll" = "Alle jetzt scannen";
+"menu.progressNormalizing" = "%@ wird normalisiert: %d/%d (%d%%)";
 "menu.settings" = "Einstellungen für überwachte Ordner…";
 "menu.history" = "Letzter Verlauf…";
 "menu.loginAtLaunch" = "Beim Anmelden starten";

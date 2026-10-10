@@ -7,10 +7,13 @@
 "status.permissionRequired" = "需要權限";
 "status.disconnected" = "資料夾無法使用";
 "status.unsupported" = "不支援的檔案系統行為";
+"status.scanningFiles" = "正在掃描檔案…";
+"status.normalizingProgress" = "正在規範化「%@」(%d/%d, %d%%)";
 "menu.about" = "關於 MoaIMF";
 "menu.pause" = "暫停監視";
 "menu.resume" = "恢復監視";
 "menu.scanAll" = "立即全部掃描";
+"menu.progressNormalizing" = "正在規範化 %@: %d/%d (%d%%)";
 "menu.settings" = "監視資料夾設定…";
 "menu.history" = "最近記錄…";
 "menu.loginAtLaunch" = "登入時啟動";

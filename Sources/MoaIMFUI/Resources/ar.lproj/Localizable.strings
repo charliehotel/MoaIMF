@@ -7,10 +7,13 @@
 "status.permissionRequired" = "يلزم إذن";
 "status.disconnected" = "المجلد غير متاح";
 "status.unsupported" = "سلوك نظام الملفات غير مدعوم";
+"status.scanningFiles" = "جارٍ فحص الملفات…";
+"status.normalizingProgress" = "جارٍ تطبيع '%@' (%d/%d، %d%%)";
 "menu.about" = "حول MoaIMF";
 "menu.pause" = "إيقاف المراقبة مؤقتًا";
 "menu.resume" = "استئناف المراقبة";
 "menu.scanAll" = "فحص الكل الآن";
+"menu.progressNormalizing" = "جارٍ تطبيع %@: %d/%d (%d%%)";
 "menu.settings" = "إعدادات المجلدات المراقبة…";
 "menu.history" = "السجل الأخير…";
 "menu.loginAtLaunch" = "التشغيل عند تسجيل الدخول";

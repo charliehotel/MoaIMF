@@ -53,10 +53,13 @@ public struct HistoryDiagnostic: Equatable, Sendable {
 public struct HistoryLoadResult: Equatable, Sendable {
   public let events: [HistoryEvent]
   public let diagnostics: [HistoryDiagnostic]
+  public let totalEventCount: Int
 
-  public init(events: [HistoryEvent], diagnostics: [HistoryDiagnostic]) {
+  public init(events: [HistoryEvent], diagnostics: [HistoryDiagnostic], totalEventCount: Int? = nil)
+  {
     self.events = events
     self.diagnostics = diagnostics
+    self.totalEventCount = totalEventCount ?? events.count
   }
 }
 
@@ -162,32 +165,77 @@ public actor HistoryStore {
   }
 
   public func load(limit: Int? = nil) throws -> HistoryLoadResult {
-    let lines = try readLines()
     var events: [HistoryEvent] = []
     var diagnostics: [HistoryDiagnostic] = []
-    let targetLines: [Data]
-    if let limit, limit > 0, lines.count > limit {
-      targetLines = Array(lines.suffix(limit))
-    } else {
-      targetLines = lines
+    guard FileManager.default.fileExists(atPath: fileURL.path) else {
+      return HistoryLoadResult(events: [], diagnostics: [])
     }
-    for (index, line) in targetLines.enumerated() {
-      do {
-        let event = try decoder().decode(HistoryEvent.self, from: line)
-        guard event.schemaVersion == 1 else {
-          diagnostics.append(
-            HistoryDiagnostic(lineNumber: index + 1, reason: "Unsupported history schema")
-          )
-          continue
-        }
-        events.append(event)
-      } catch {
-        diagnostics.append(
-          HistoryDiagnostic(lineNumber: index + 1, reason: String(describing: error))
+    let handle = try FileHandle(forReadingFrom: fileURL)
+    defer { try? handle.close() }
+    var lineNumber = 0
+    var totalEventCount = 0
+    var pending = Data()
+    while let chunk = try handle.read(upToCount: 64 * 1024), !chunk.isEmpty {
+      pending.append(chunk)
+      while let newline = pending.firstRange(of: Data([0x0A])) {
+        lineNumber += 1
+        let line = Data(pending[..<newline.lowerBound])
+        pending.removeSubrange(..<newline.upperBound)
+        try decodeHistoryLine(
+          line,
+          lineNumber: lineNumber,
+          limit: limit,
+          events: &events,
+          diagnostics: &diagnostics,
+          totalEventCount: &totalEventCount
         )
       }
     }
-    return HistoryLoadResult(events: events, diagnostics: diagnostics)
+    if !pending.isEmpty {
+      lineNumber += 1
+      try decodeHistoryLine(
+        pending,
+        lineNumber: lineNumber,
+        limit: limit,
+        events: &events,
+        diagnostics: &diagnostics,
+        totalEventCount: &totalEventCount
+      )
+    }
+    return HistoryLoadResult(
+      events: events,
+      diagnostics: diagnostics,
+      totalEventCount: totalEventCount
+    )
+  }
+
+  private func decodeHistoryLine(
+    _ line: Data,
+    lineNumber: Int,
+    limit: Int?,
+    events: inout [HistoryEvent],
+    diagnostics: inout [HistoryDiagnostic],
+    totalEventCount: inout Int
+  ) throws {
+    do {
+      let event = try decoder().decode(HistoryEvent.self, from: line)
+      guard event.schemaVersion == 1 else {
+        diagnostics.append(
+          HistoryDiagnostic(lineNumber: lineNumber, reason: "Unsupported history schema")
+        )
+        return
+      }
+      totalEventCount += 1
+      events.append(event)
+      if let limit, limit > 0, events.count > limit { events.removeFirst() }
+    } catch {
+      if let limit, limit > 0 {
+        guard diagnostics.count < limit else { return }
+      }
+      diagnostics.append(
+        HistoryDiagnostic(lineNumber: lineNumber, reason: String(describing: error))
+      )
+    }
   }
 
   private func prune(referenceDate: Date) throws {

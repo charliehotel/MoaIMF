@@ -7,10 +7,13 @@
 "status.permissionRequired" = "Permissão necessária";
 "status.disconnected" = "Pasta indisponível";
 "status.unsupported" = "Comportamento do sistema de arquivos não compatível";
+"status.scanningFiles" = "Verificando arquivos…";
+"status.normalizingProgress" = "Normalizando “%@” (%d/%d, %d%%)";
 "menu.about" = "Sobre o MoaIMF";
 "menu.pause" = "Pausar monitoramento";
 "menu.resume" = "Retomar monitoramento";
 "menu.scanAll" = "Verificar tudo agora";
+"menu.progressNormalizing" = "Normalizando %@: %d/%d (%d%%)";
 "menu.settings" = "Ajustes de pastas monitoradas…";
 "menu.history" = "Histórico recente…";
 "menu.loginAtLaunch" = "Abrir ao iniciar sessão";

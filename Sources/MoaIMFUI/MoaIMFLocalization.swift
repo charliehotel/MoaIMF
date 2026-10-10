@@ -70,7 +70,9 @@ public enum MoaIMFLocalization {
   public static let initialKeys = [
     "app.name", "status.watching", "status.scanning", "status.paused", "status.attention",
     "status.noFolders", "status.permissionRequired", "status.disconnected", "status.unsupported",
-    "menu.about", "menu.pause", "menu.resume", "menu.scanAll", "menu.settings", "menu.history",
+    "status.scanningFiles", "status.normalizingProgress",
+    "menu.about", "menu.pause", "menu.resume", "menu.scanAll", "menu.progressNormalizing",
+    "menu.settings", "menu.history",
     "menu.loginAtLaunch", "menu.loginStatus.enabled", "menu.loginStatus.requiresApproval",
     "menu.loginStatus.disabled", "menu.loginStatus.notFound", "menu.loginOpenSettings",
     "menu.todayRenamedCount", "menu.checkForUpdates", "menu.updateChecking",

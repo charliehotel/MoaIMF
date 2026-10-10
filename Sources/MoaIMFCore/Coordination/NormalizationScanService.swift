@@ -22,20 +22,26 @@ public actor NormalizationScanService: ScanServicing {
     scanner = FileTreeScanner(excludedRoots: excludedRoots)
   }
 
-  public func scan(_ request: ScanRequest) async throws -> ScanServiceResult {
+  public func scan(
+    _ request: ScanRequest,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)? = nil
+  ) async throws -> ScanServiceResult {
     try Task.checkCancellation()
+    onProgress?(ScanServiceProgress(phase: .scanning))
     let recoveryOutcomes = try await engine.recoverPendingOperations()
     try await record(outcomes: recoveryOutcomes, root: request.root)
     let rules = try await ruleStore.allRules()
     let snapshot = try scanner.scan(
       root: request.root,
-      matcher: StabilityExclusionMatcher(rules: rules)
+      matcher: StabilityExclusionMatcher(rules: rules),
+      onProgress: { count in
+        onProgress?(ScanServiceProgress(phase: .scanning, completed: count))
+      }
     )
     try Task.checkCancellation()
 
-    let stableEntries = await tracker.stableEntries(in: snapshot)
+    let stableIdentities = Set(await tracker.stableEntries(in: snapshot).map(\.identity))
     let scopedIdentities = scopedIdentitySet(request: request, snapshot: snapshot)
-    let stableIdentities = Set(stableEntries.map(\.identity))
     let eligibleIdentities: Set<FileIdentity>
     switch request.scope {
     case .manualPreview, .manualApply:
@@ -52,15 +58,20 @@ public actor NormalizationScanService: ScanServicing {
         scopedIdentities: scopedIdentities
       )
     )
-    let deferredIdentities = Set(
-      snapshot.entries.compactMap { entry in
-        entry.stabilityExclusion == nil ? nil : entry.identity
+    var deferredIdentities = Set<FileIdentity>()
+    var nfcEntryCount = 0
+    for entry in snapshot.entries {
+      if entry.stabilityExclusion != nil {
+        deferredIdentities.insert(entry.identity)
       }
-    )
+      if UnicodeNormalizer.isNFC(entry.rawName) {
+        nfcEntryCount += 1
+      }
+    }
     let summary = ScanContentSummary(
       totalEntryCount: snapshot.entries.count,
-      nfcEntryCount: snapshot.entries.filter { UnicodeNormalizer.isNFC($0.rawName) }.count,
-      nonNFCEntryCount: snapshot.entries.filter { !UnicodeNormalizer.isNFC($0.rawName) }.count
+      nfcEntryCount: nfcEntryCount,
+      nonNFCEntryCount: snapshot.entries.count - nfcEntryCount
     )
 
     if request.scope == .manualPreview {
@@ -73,7 +84,16 @@ public actor NormalizationScanService: ScanServicing {
 
     try await record(collisions: filteredPlan.collisions, root: request.root)
     try Task.checkCancellation()
-    let outcomes = try await engine.apply(filteredPlan)
+    let outcomes = try await engine.apply(filteredPlan) { renameProgress in
+      onProgress?(
+        ScanServiceProgress(
+          phase: .normalizing,
+          completed: renameProgress.completed,
+          total: renameProgress.total,
+          currentItemName: renameProgress.currentItemName
+        )
+      )
+    }
     try await record(outcomes: outcomes, root: request.root)
     let pendingIdentities = Set<FileIdentity>(
       snapshot.entries.compactMap { entry in
@@ -95,6 +115,10 @@ public actor NormalizationScanService: ScanServicing {
       outcomes: outcomes,
       deferredIdentities: deferredIdentities
     )
+  }
+
+  public func scan(_ request: ScanRequest) async throws -> ScanServiceResult {
+    try await scan(request, onProgress: nil)
   }
 
   private func scopedIdentitySet(
@@ -153,6 +177,7 @@ public actor NormalizationScanService: ScanServicing {
 
   private func plan(snapshot: ScanSnapshot) throws -> NormalizationPlan {
     var entriesByParent: [URL: [SiblingEntry]] = [:]
+    entriesByParent.reserveCapacity(snapshot.entries.count / 8)
     for entry in snapshot.entries {
       try Task.checkCancellation()
       let parent = entry.url.deletingLastPathComponent()
@@ -176,10 +201,9 @@ public actor NormalizationScanService: ScanServicing {
   }
 
   private func record(collisions: [NormalizationCollision], root: URL) async throws {
-    let now = Date()
     let events = collisions.map { collision in
       HistoryEvent(
-        timestamp: now,
+        timestamp: Date(),
         kind: .collision,
         rootIdentifier: root.path,
         previousURL: collision.parent,
@@ -191,11 +215,10 @@ public actor NormalizationScanService: ScanServicing {
   }
 
   private func record(outcomes: [RenameOutcome], root: URL) async throws {
-    let now = Date()
     let events = outcomes.map { outcome in
       let kind: HistoryEventKind = outcome.kind == .renamed ? .renamed : .error
       return HistoryEvent(
-        timestamp: now,
+        timestamp: Date(),
         kind: kind,
         rootIdentifier: root.path,
         previousURL: outcome.source,

@@ -173,6 +173,18 @@ public struct HistoryView: View {
         .font(.subheadline)
         .foregroundStyle(.secondary)
 
+      if controller.totalHistoryCount > controller.history.count {
+        Text(
+          String(
+            format: historyDisplayedOfTotalFormat,
+            controller.history.count,
+            controller.totalHistoryCount
+          )
+        )
+        .font(.caption)
+        .foregroundStyle(.secondary)
+      }
+
       ViewThatFits(in: .horizontal) {
         HStack(spacing: 12) {
           dateScopePicker
@@ -245,12 +257,19 @@ public struct HistoryView: View {
   }
 
   private var resultSummary: String {
-    String(
+    let shownCount = filteredEvents.count
+    return String(
       format: MoaIMFLocalization.text("history.resultSummary"),
       dateScopeLabel(dateScope),
       filterLabel(filter),
-      filteredEvents.count
+      shownCount
     )
+  }
+
+  private var historyDisplayedOfTotalFormat: String {
+    LanguageManager.shared.selection == .korean
+      ? MoaIMFLocalization.text("history.displayedOfTotal", language: .korean)
+      : MoaIMFLocalization.text("history.displayedOfTotal", language: .english)
   }
 
   private var filteredEvents: [HistoryEvent] {

@@ -39,6 +39,22 @@ public struct MenuBarView: View {
     .disabled(controller.folders.isEmpty || controller.isScanning)
     .keyboardShortcut("r")
 
+    if let progress = controller.scanProgress {
+      Label(
+        progress.phase == .scanning
+          ? MoaIMFLocalization.text("status.scanningFiles")
+          : String(
+            format: MoaIMFLocalization.text("menu.progressNormalizing"),
+            progress.folderName,
+            progress.completed,
+            progress.total,
+            progress.percentage
+          ),
+        systemImage: "arrow.triangle.2.circlepath"
+      )
+      .foregroundStyle(.secondary)
+    }
+
     Divider()
 
     Button(MoaIMFLocalization.text("menu.settings")) {

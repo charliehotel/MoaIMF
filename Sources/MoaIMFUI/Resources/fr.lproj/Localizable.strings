@@ -7,10 +7,13 @@
 "status.permissionRequired" = "Autorisation requise";
 "status.disconnected" = "Dossier indisponible";
 "status.unsupported" = "Comportement du système de fichiers non pris en charge";
+"status.scanningFiles" = "Analyse des fichiers en cours…";
+"status.normalizingProgress" = "Normalisation de « %@ » (%d/%d, %d%%)";
 "menu.about" = "À propos de MoaIMF";
 "menu.pause" = "Suspendre la surveillance";
 "menu.resume" = "Reprendre la surveillance";
 "menu.scanAll" = "Tout analyser maintenant";
+"menu.progressNormalizing" = "Normalisation de %@ : %d/%d (%d%%)";
 "menu.settings" = "Réglages des dossiers surveillés…";
 "menu.history" = "Historique récent…";
 "menu.loginAtLaunch" = "Lancer à l’ouverture de session";

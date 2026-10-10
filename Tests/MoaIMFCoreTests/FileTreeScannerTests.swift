@@ -62,6 +62,20 @@ final class FileTreeScannerTests: XCTestCase {
     XCTAssertTrue(UnicodeNormalizer.isNFC(entry.rawName))
   }
 
+  func testReportsScannedEntryCountsAndFinalCount() throws {
+    let fixture = try TemporaryScanFixture()
+    defer { fixture.remove() }
+    var progress: [Int] = []
+
+    let snapshot = try FileTreeScanner(excludedRoots: fixture.excludedRoots).scan(
+      root: fixture.root,
+      onProgress: { progress.append($0) }
+    )
+
+    XCTAssertEqual(progress.last, snapshot.entries.count)
+    XCTAssertTrue(progress.allSatisfy { $0 <= snapshot.entries.count })
+  }
+
   func testMatchedDirectoryIsReportedWithoutTraversingDescendants() throws {
     let fixture = try TemporaryScanFixture()
     defer { fixture.remove() }

@@ -7,10 +7,13 @@
 "status.permissionRequired" = "需要权限";
 "status.disconnected" = "文件夹不可用";
 "status.unsupported" = "不支持的文件系统行为";
+"status.scanningFiles" = "正在扫描文件…";
+"status.normalizingProgress" = "正在规范化“%@” (%d/%d, %d%%)";
 "menu.about" = "关于 MoaIMF";
 "menu.pause" = "暂停监视";
 "menu.resume" = "恢复监视";
 "menu.scanAll" = "立即全部扫描";
+"menu.progressNormalizing" = "正在规范化 %@: %d/%d (%d%%)";
 "menu.settings" = "监视文件夹设置…";
 "menu.history" = "最近历史…";
 "menu.loginAtLaunch" = "登录时启动";

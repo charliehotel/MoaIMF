@@ -183,6 +183,36 @@ final class SafeRenameEngineTests: XCTestCase {
     XCTAssertTrue(journalRecords.isEmpty)
   }
 
+  func testApplyReportsProgressForEachCandidate() async throws {
+    let fixture = try RenameFixture()
+    defer { fixture.remove() }
+    _ = try fixture.write(name: "가.txt", contents: "first")
+    _ = try fixture.write(name: "나.txt", contents: "second")
+    let first = try fixture.candidate(rawName: "가.txt")
+    let second = try fixture.candidate(rawName: "나.txt")
+    let engine = SafeRenameEngine(journal: fixture.journal)
+
+    final class ProgressRecorder: @unchecked Sendable {
+      var updates: [RenameProgress] = []
+      let lock = NSLock()
+      func record(_ progress: RenameProgress) {
+        lock.lock()
+        updates.append(progress)
+        lock.unlock()
+      }
+    }
+
+    let recorder = ProgressRecorder()
+    let outcomes = try await engine.apply(plan(candidates: [first, second])) { progress in
+      recorder.record(progress)
+    }
+
+    XCTAssertEqual(outcomes.count, 2)
+    XCTAssertFalse(recorder.updates.isEmpty)
+    XCTAssertEqual(recorder.updates.first?.total, 2)
+    XCTAssertEqual(recorder.updates.last?.completed, 2)
+  }
+
   private func plan(candidates: [RenameCandidate]) -> NormalizationPlan {
     NormalizationPlan(candidates: candidates, collisions: [])
   }

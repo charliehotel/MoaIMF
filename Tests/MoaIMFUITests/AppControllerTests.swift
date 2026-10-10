@@ -109,7 +109,32 @@ final class AppControllerTests: XCTestCase {
     XCTAssertEqual(report.deferredCount, 1)
     XCTAssertNil(context.controller.preview)
     XCTAssertTrue(context.data.addedURLs.isEmpty)
-    XCTAssertEqual(context.scanner.applyCallCount, 0)
+    XCTAssertEqual(context.scanner.applyCallCount, 1)
+  }
+
+  func testScanFolderPublishesProgressDuringExecution() async throws {
+    let context = TestContext()
+    let watched = folder(id: UUID(uuidString: "00000000-0000-0000-0000-000000000123") ?? UUID())
+    context.data.loadedFolders = [watched]
+    context.scanner.previewResult = ScanServiceResult(
+      plan: NormalizationPlan(
+        candidates: [candidate(name: "한글.txt")],
+        collisions: []
+      )
+    )
+    await context.controller.load()
+
+    var progressSnapshots: [AppScanProgress] = []
+    let cancellable = context.controller.$scanProgress.sink { progress in
+      if let progress { progressSnapshots.append(progress) }
+    }
+    defer { cancellable.cancel() }
+
+    await context.controller.scanFolder(id: watched.id)
+
+    XCTAssertFalse(progressSnapshots.isEmpty)
+    XCTAssertEqual(progressSnapshots.first?.folderName, watched.displayName)
+    XCTAssertNil(context.controller.scanProgress)
   }
 
   func testScanAllAppliesCandidatesAndReloadsRecentHistory() async throws {
@@ -486,6 +511,17 @@ private final class FakeAppScanController: AppScanControlling {
   func apply(root: URL, identities: Set<FileIdentity>) async throws -> ScanServiceResult {
     applyCallCount += 1
     appliedIdentities.append(identities)
+    return applyResult ?? previewResult
+  }
+  func apply(
+    root: URL,
+    identities: Set<FileIdentity>,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)?
+  ) async throws -> ScanServiceResult {
+    applyCallCount += 1
+    appliedIdentities.append(identities)
+    onProgress?(
+      ScanServiceProgress(phase: .normalizing, completed: 1, total: 1, currentItemName: "test.txt"))
     return applyResult ?? previewResult
   }
   func pause() async { pauseCallCount += 1 }

@@ -9,11 +9,13 @@ public final class AppController: ObservableObject {
   @Published public private(set) var folders: [AppFolder] = []
   @Published public private(set) var stabilityRules: [StabilityExclusionRule] = []
   @Published public private(set) var history: [HistoryEvent] = []
+  @Published public private(set) var totalHistoryCount = 0
   @Published public private(set) var preview: PreviewState?
   @Published public private(set) var folderScanReports: [UUID: FolderScanReport] = [:]
   @Published public private(set) var scanResult: ScanResultSummary?
   @Published public private(set) var alert: AppAlert?
   @Published public private(set) var isScanning = false
+  @Published public private(set) var scanProgress: AppScanProgress?
   @Published public private(set) var updateCheckStatus: AppUpdateStatus = .idle
   @Published public private(set) var availableUpdate: AppUpdate?
   @Published public private(set) var automaticAvailableUpdate: AppUpdate?
@@ -72,14 +74,15 @@ public final class AppController: ObservableObject {
   }
 
   public var isPaused: Bool { preferences.isPaused }
-
   private static let historyDisplayLimit = 500
 
   public func load() async {
     do {
       folders = try await dataService.loadFolders()
       stabilityRules = try await dataService.loadRules()
-      history = try await dataService.loadHistory(limit: Self.historyDisplayLimit).sorted { $0.timestamp > $1.timestamp }
+      let loadedHistory = try await dataService.loadHistorySummary(limit: Self.historyDisplayLimit)
+      history = loadedHistory.events.sorted { $0.timestamp > $1.timestamp }
+      totalHistoryCount = loadedHistory.totalEventCount
       if preferences.isPaused {
         await scanController.pause()
       } else {
@@ -109,14 +112,51 @@ public final class AppController: ObservableObject {
   public func scanFolder(id: UUID) async {
     guard let folder = folders.first(where: { $0.id == id }) else { return }
     await withScanning {
-      let result = try await scanController.preview(root: folder.url)
-      folderScanReports[id] = FolderScanReport(root: folder.url, scannedAt: Date(), result: result)
+      self.scanProgress = AppScanProgress(
+        folderName: folder.displayName,
+        phase: .scanning,
+        completed: 0,
+        total: 0,
+        currentItemName: nil
+      )
+      let preview = try await scanController.preview(root: folder.url)
+      let identities = Set(preview.plan.candidates.map(\.identity))
+      let result: ScanServiceResult
+      if identities.isEmpty {
+        result = preview
+      } else {
+        result = try await scanController.apply(
+          root: folder.url,
+          identities: identities
+        ) { [weak self] progress in
+          Task { @MainActor [weak self] in
+            self?.scanProgress = AppScanProgress(
+              folderName: folder.displayName,
+              phase: progress.phase == .scanning ? .scanning : .normalizing,
+              completed: progress.completed,
+              total: progress.total,
+              currentItemName: progress.currentItemName
+            )
+          }
+        }
+      }
+      let report = FolderScanReport(root: folder.url, scannedAt: Date(), result: result)
+      self.folderScanReports[id] = report
+      let loadedHistory = try await self.dataService.loadHistorySummary(
+        limit: Self.historyDisplayLimit)
+      self.history = loadedHistory.events.sorted {
+        $0.timestamp > $1.timestamp
+      }
+      self.totalHistoryCount = loadedHistory.totalEventCount
       if !result.plan.collisions.isEmpty {
         alert = AppAlert(localizationKey: "alert.collision")
         await notifier.notify(.collision)
       } else {
         alert = nil
       }
+      let summary = ScanResultSummary(reports: [report])
+      self.scanResult = summary
+      self.presentScanResult(summary)
     }
   }
 
@@ -173,13 +213,36 @@ public final class AppController: ObservableObject {
     var reports: [FolderScanReport] = []
     await withScanning(
       {
-        for folder in folders where folder.isEnabled && folder.status == .available {
+        let availableFolders = folders.filter { $0.isEnabled && $0.status == .available }
+        for folder in availableFolders {
+          self.scanProgress = AppScanProgress(
+            folderName: folder.displayName,
+            phase: .scanning,
+            completed: 0,
+            total: 0,
+            currentItemName: nil
+          )
           let preview = try await scanController.preview(root: folder.url)
           let identities = Set(preview.plan.candidates.map(\.identity))
-          let result = try await scanController.apply(
-            root: folder.url,
-            identities: identities
-          )
+          let result: ScanServiceResult
+          if identities.isEmpty {
+            result = preview
+          } else {
+            result = try await scanController.apply(
+              root: folder.url,
+              identities: identities
+            ) { [weak self] progress in
+              Task { @MainActor [weak self] in
+                self?.scanProgress = AppScanProgress(
+                  folderName: folder.displayName,
+                  phase: progress.phase == .scanning ? .scanning : .normalizing,
+                  completed: progress.completed,
+                  total: progress.total,
+                  currentItemName: progress.currentItemName
+                )
+              }
+            }
+          }
           let report = FolderScanReport(
             root: folder.url,
             scannedAt: Date(),
@@ -188,9 +251,12 @@ public final class AppController: ObservableObject {
           reports.append(report)
           self.folderScanReports[folder.id] = report
         }
-        self.history = try await self.dataService.loadHistory(limit: Self.historyDisplayLimit).sorted {
+        let loadedHistory = try await self.dataService.loadHistorySummary(
+          limit: Self.historyDisplayLimit)
+        self.history = loadedHistory.events.sorted {
           $0.timestamp > $1.timestamp
         }
+        self.totalHistoryCount = loadedHistory.totalEventCount
         self.alert = nil
         let summary = ScanResultSummary(reports: reports)
         self.scanResult = summary
@@ -322,14 +388,17 @@ public final class AppController: ObservableObject {
   ) async {
     isScanning = true
     status = .scanning
+    defer {
+      isScanning = false
+      scanProgress = nil
+      updateStatus()
+    }
     do {
       try await operation()
     } catch {
       handle(error)
       onError?(error)
     }
-    isScanning = false
-    updateStatus()
   }
 
   private func updateStatus() {

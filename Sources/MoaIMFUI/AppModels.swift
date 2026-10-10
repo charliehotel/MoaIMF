@@ -36,6 +36,42 @@ public enum AppStatus: Equatable, Sendable {
   }
 }
 
+public struct AppScanProgress: Equatable, Sendable {
+  public enum Phase: Equatable, Sendable {
+    case scanning
+    case normalizing
+  }
+
+  public let folderName: String
+  public let phase: Phase
+  public let completed: Int
+  public let total: Int
+  public let currentItemName: String?
+
+  public init(
+    folderName: String,
+    phase: Phase,
+    completed: Int = 0,
+    total: Int = 0,
+    currentItemName: String? = nil
+  ) {
+    self.folderName = folderName
+    self.phase = phase
+    self.completed = completed
+    self.total = total
+    self.currentItemName = currentItemName
+  }
+
+  public var fractionCompleted: Double {
+    guard total > 0 else { return 0 }
+    return min(1.0, max(0.0, Double(completed) / Double(total)))
+  }
+
+  public var percentage: Int {
+    Int(fractionCompleted * 100)
+  }
+}
+
 public struct AppFolder: Identifiable, Equatable, Sendable {
   public let id: UUID
   public let url: URL

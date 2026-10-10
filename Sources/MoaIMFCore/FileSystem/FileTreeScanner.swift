@@ -76,7 +76,8 @@ public struct FileTreeScanner: Sendable {
 
   public func scan(
     root: URL,
-    matcher: StabilityExclusionMatcher? = nil
+    matcher: StabilityExclusionMatcher? = nil,
+    onProgress: ((Int) -> Void)? = nil
   ) throws -> ScanSnapshot {
     let standardizedRoot = Self.canonicalURL(root)
     let rootValues = try standardizedRoot.resourceValues(
@@ -130,7 +131,12 @@ public struct FileTreeScanner: Sendable {
           stabilityExclusion: exclusion
         )
       )
+      if entries.count.isMultiple(of: 256) {
+        onProgress?(entries.count)
+      }
     }
+
+    onProgress?(entries.count)
 
     if let enumerationFailure {
       throw enumerationFailure

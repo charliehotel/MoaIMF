@@ -31,11 +31,60 @@ struct WatchedFoldersView: View {
   }
 
   private var statusHeader: some View {
-    Label(
-      MoaIMFLocalization.text(controller.status.localizationKey),
-      systemImage: controller.status.symbolName
-    )
-    .font(.headline)
+    VStack(alignment: .leading, spacing: 8) {
+      if let progress = controller.scanProgress {
+        VStack(alignment: .leading, spacing: 6) {
+          HStack {
+            Label(
+              progress.phase == .scanning
+                ? MoaIMFLocalization.text("status.scanningFiles")
+                : String(
+                  format: MoaIMFLocalization.text("status.normalizingProgress"),
+                  progress.folderName,
+                  progress.completed,
+                  progress.total,
+                  progress.percentage
+                ),
+              systemImage: "arrow.triangle.2.circlepath"
+            )
+            .font(.headline)
+
+            Spacer()
+
+            if progress.phase == .normalizing {
+              Text("\(progress.percentage)%")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+            }
+          }
+
+          if progress.phase == .normalizing && progress.total > 0 {
+            ProgressView(value: progress.fractionCompleted)
+              .progressViewStyle(.linear)
+          } else {
+            ProgressView()
+              .progressViewStyle(.linear)
+          }
+
+          if let current = progress.currentItemName, !current.isEmpty {
+            Text(current)
+              .font(.caption)
+              .foregroundStyle(.secondary)
+              .lineLimit(1)
+              .truncationMode(.middle)
+          }
+        }
+        .padding(8)
+        .background(Color(NSColor.controlBackgroundColor).opacity(0.6))
+        .cornerRadius(6)
+      } else {
+        Label(
+          MoaIMFLocalization.text(controller.status.localizationKey),
+          systemImage: controller.status.symbolName
+        )
+        .font(.headline)
+      }
+    }
   }
 
   private func folderRow(_ folder: AppFolder) -> some View {
@@ -51,6 +100,15 @@ struct WatchedFoldersView: View {
         Text(statusText(folder))
           .font(.caption)
           .foregroundStyle(.secondary)
+        if let progress = controller.scanProgress, progress.folderName == folder.displayName {
+          Text(
+            progress.phase == .scanning
+              ? MoaIMFLocalization.text("status.scanningFiles")
+              : "\(progress.completed)/\(progress.total) (\(progress.percentage)%)"
+          )
+          .font(.caption)
+          .foregroundStyle(.blue)
+        }
         if let report = controller.folderScanReports[folder.id] {
           FolderScanReportView(report: report)
         }

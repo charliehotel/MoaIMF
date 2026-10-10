@@ -7,6 +7,7 @@ public protocol AppDataServicing: AnyObject {
   func loadRules() async throws -> [StabilityExclusionRule]
   func loadHistory() async throws -> [HistoryEvent]
   func loadHistory(limit: Int?) async throws -> [HistoryEvent]
+  func loadHistorySummary(limit: Int?) async throws -> HistoryLoadResult
   func addFolder(
     url: URL,
     mode: WatchedFolderNormalizationMode
@@ -27,6 +28,16 @@ extension AppDataServicing {
     }
     return all
   }
+  public func loadHistorySummary(limit: Int?) async throws -> HistoryLoadResult {
+    let all = try await loadHistory()
+    let events =
+      if let limit, limit > 0, all.count > limit {
+        Array(all.suffix(limit))
+      } else {
+        all
+      }
+    return HistoryLoadResult(events: events, diagnostics: [], totalEventCount: all.count)
+  }
 }
 
 @MainActor
@@ -35,10 +46,33 @@ public protocol AppScanControlling: AnyObject {
   func updateRoots(_ roots: [URL: Set<FileIdentity>]) async
   func preview(root: URL) async throws -> ScanServiceResult
   func apply(root: URL, identities: Set<FileIdentity>) async throws -> ScanServiceResult
+  func apply(
+    root: URL,
+    identities: Set<FileIdentity>,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)?
+  ) async throws -> ScanServiceResult
   func pause() async
   func resume() async
   func rulesDidChange() async
   func shutdown() async
+}
+
+extension AppScanControlling {
+  public func apply(
+    root: URL,
+    identities: Set<FileIdentity>
+  ) async throws -> ScanServiceResult {
+    try await apply(root: root, identities: identities, onProgress: nil)
+  }
+
+  public func apply(
+    root: URL,
+    identities: Set<FileIdentity>,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)?
+  ) async throws -> ScanServiceResult {
+    try await apply(root: root, identities: identities)
+  }
+
 }
 
 @MainActor
@@ -115,7 +149,18 @@ public final class CoordinatorScanController: AppScanControlling {
   }
 
   public func apply(root: URL, identities: Set<FileIdentity>) async throws -> ScanServiceResult {
-    try await scanService.scan(ScanRequest(root: root, scope: .manualApply(identities)))
+    try await apply(root: root, identities: identities, onProgress: nil)
+  }
+
+  public func apply(
+    root: URL,
+    identities: Set<FileIdentity>,
+    onProgress: (@Sendable (ScanServiceProgress) -> Void)?
+  ) async throws -> ScanServiceResult {
+    try await scanService.scan(
+      ScanRequest(root: root, scope: .manualApply(identities)),
+      onProgress: onProgress
+    )
   }
 
   public func pause() async { await coordinator.pause() }

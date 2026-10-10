@@ -7,10 +7,13 @@
 "status.permissionRequired" = "Permiso requerido";
 "status.disconnected" = "Carpeta no disponible";
 "status.unsupported" = "Comportamiento del sistema de archivos no compatible";
+"status.scanningFiles" = "Escaneando archivos…";
+"status.normalizingProgress" = "Normalizando «%@» (%d/%d, %d%%)";
 "menu.about" = "Acerca de MoaIMF";
 "menu.pause" = "Pausar vigilancia";
 "menu.resume" = "Reanudar vigilancia";
 "menu.scanAll" = "Escanear todo ahora";
+"menu.progressNormalizing" = "Normalizando %@: %d/%d (%d%%)";
 "menu.settings" = "Ajustes de carpetas vigiladas…";
 "menu.history" = "Historial reciente…";
 "menu.loginAtLaunch" = "Abrir al iniciar sesión";

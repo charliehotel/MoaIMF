@@ -56,6 +56,10 @@ public final class LocalAppDataService: AppDataServicing {
     try await loadHistory(limit: nil)
   }
 
+  public func loadHistorySummary(limit: Int?) async throws -> HistoryLoadResult {
+    try await historyStore.load(limit: limit)
+  }
+
   public func addFolder(
     url: URL,
     mode: WatchedFolderNormalizationMode

@@ -7,10 +7,13 @@
 "status.permissionRequired" = "権限が必要です";
 "status.disconnected" = "フォルダを利用できません";
 "status.unsupported" = "未対応のファイルシステム動作";
+"status.scanningFiles" = "ファイル一覧をスキャン中…";
+"status.normalizingProgress" = "‘%@’ を正規化中 (%d/%d, %d%%)";
 "menu.about" = "MoaIMFについて";
 "menu.pause" = "監視を一時停止";
 "menu.resume" = "監視を再開";
 "menu.scanAll" = "今すぐすべてスキャン";
+"menu.progressNormalizing" = "%@ を正規化中: %d/%d (%d%%)";
 "menu.settings" = "監視フォルダ設定…";
 "menu.history" = "最近の履歴…";
 "menu.loginAtLaunch" = "ログイン時に起動";

@@ -149,7 +149,8 @@ struct RenameFileSystem: Sendable {
       let sourceParent = source.deletingLastPathComponent()
       let targetParent = target.deletingLastPathComponent()
       if sourceParent == targetParent {
-        cache.didRename(from: source.lastPathComponent, to: target.lastPathComponent, in: sourceParent)
+        cache.didRename(
+          from: source.lastPathComponent, to: target.lastPathComponent, in: sourceParent)
       } else {
         cache.didRemove(source.lastPathComponent, in: sourceParent)
         cache.didInsert(target.lastPathComponent, in: targetParent)

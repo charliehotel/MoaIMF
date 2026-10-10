@@ -78,6 +78,26 @@ final class HistoryStoreTests: XCTestCase {
     XCTAssertEqual(result.events.count, 1)
     XCTAssertEqual(result.diagnostics.map(\.lineNumber), [2])
   }
+
+  func testLimitedLoadReturnsNewestEventsAndTotalCount() async throws {
+    let fixture = try HistoryFixture()
+    defer { fixture.remove() }
+    let store = HistoryStore(fileURL: fixture.fileURL, now: fixture.clock.now)
+    for index in 0..<5 {
+      _ = try await store.record(
+        kind: .renamed,
+        rootIdentifier: "event-\(index)",
+        previousURL: nil,
+        resultingURL: nil,
+        reason: "record"
+      )
+    }
+
+    let result = try await store.load(limit: 2)
+
+    XCTAssertEqual(result.events.map(\.rootIdentifier), ["event-3", "event-4"])
+    XCTAssertEqual(result.totalEventCount, 5)
+  }
 }
 
 private final class HistoryFixture {
